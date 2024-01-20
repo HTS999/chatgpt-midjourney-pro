@@ -12,6 +12,8 @@ import { chatSetting } from "./chat";
 //import {encode,  encodeChat} from "gpt-tokenizer/cjs/encoding/cl100k_base.js";
 //import { get_encoding } from '@dqbd/tiktoken'
 //import FormData from 'form-data';
+import {getLocalToken} from './dutu/aidutu';
+import { nextTick } from "vue";
 
 export const KnowledgeCutOffDate: Record<string, string> = {
   default: "2021-09",
@@ -156,7 +158,7 @@ interface subModelType{
 }
 function getHeaderAuthorization(){
     if(!gptServerStore.myData.OPENAI_API_KEY){
-        return {}
+        return {'x-token': getLocalToken() }
     }
     return {
         'Authorization': 'Bearer ' +gptServerStore.myData.OPENAI_API_KEY
@@ -219,13 +221,20 @@ export const subModel= async (opt: subModelType)=>{
             },
             onError(e ){
                 //console.log('eee>>', e )
-                mlog('❌未错误',e    )
+                mlog('❌未错误' ,e    )
                 opt.onError && opt.onError(e)
             },
             body:JSON.stringify(body)
         });
-     } catch (error ) {
-        mlog('❌未错误2',error  )
+     } catch (error:any ) {
+        mlog('❌未错误2' ,error ,error.reason, error.statusCode , Object.keys(error)  )
+        if( error.statusCode && error.statusCode==431 ){
+            mlog('hello 431')
+           
+            setTimeout(  ()=>homeStore.setMyData({act:'showLogin'}) , 431 )
+            //homeStore.setMyData({act:'scrollToBottomIfAtBottom'})
+
+        }
         opt.onError && opt.onError(error)
      }
 }

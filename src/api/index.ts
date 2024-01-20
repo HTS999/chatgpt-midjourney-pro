@@ -1,6 +1,7 @@
 import type { AxiosProgressEvent, GenericAbortSignal } from 'axios'
 import { post } from '@/utils/request'
 import { useAuthStore, useSettingStore } from '@/store'
+import { from } from 'form-data';
 
 
 export function fetchChatAPI<T = any>(
@@ -72,5 +73,6 @@ export * from "./openapi"
 export * from "./units"
 export * from "./mic"
 export * from "./chat"
+export * from "./dutu/aidutu"
 export * from "./sse/fetchsse"
 

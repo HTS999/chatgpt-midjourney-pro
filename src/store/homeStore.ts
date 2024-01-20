@@ -1,17 +1,24 @@
-import { gptsType, mlog } from '@/api';
+import { getLocalToken, gptsType, mlog } from '@/api';
 import { reactive } from 'vue'
-export const homeStore = reactive({
-    myData:{
-        act:'',//动作
+
+const homeInit= ()=>{
+    const token= getLocalToken();
+    const isLogin= ! ( !token || token=='1-1-1')
+    return {
+         act:'',//动作
         actData:{} //动作类别 
         ,local:'' //当前所处的版本
         ,session:{} as any
         ,isLoader:false
-       
+        ,isLogin 
     }
+}
+export const homeStore = reactive({
+    myData: homeInit()
     
     ,setMyData( v:object){
         this.myData={...this.myData,...v}; 
+    
         if( Object.keys(v).indexOf('act')>-1){ 
             setTimeout(()=> {
                 this.myData.act=''

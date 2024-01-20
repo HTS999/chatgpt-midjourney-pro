@@ -264,4 +264,9 @@ export default {
     ,setBtSaveChat:'仅保存会话'
     ,setBtSaveSys: '保存至系统'
   }
+  ,ai:{  
+   sanLogin:'请使用微信扫一扫 关注并登录'
+  ,timeout4:'二维码已失效'
+  ,reflash:'刷新重新获取'
+  }
 }

@@ -32,14 +32,19 @@ export default defineConfig((env) => {
     },
     plugins: setupPlugins(viteEnv),
     server: {
-      host: '0.0.0.0',
-      port: 1002,
+      host: 'wvip.minihuo.com',
+      port: 1102,
       open: false,
       proxy: {
         '/api': {
           target: viteEnv.VITE_APP_API_BASE_URL,
           changeOrigin: true, // 允许跨域
           rewrite: path => path.replace('/api/', '/'),
+        },
+        '/vapi': {
+          target: viteEnv.VITE_APP_DATA_URL,
+          changeOrigin: true, // 允许跨域
+          rewrite: path => path.replace('/vapi/', '/'),
         },
         '/mjapi': {
           target: viteEnv.VITE_APP_API_BASE_URL,

@@ -16,6 +16,7 @@ import FormData  from 'form-data'
 import axios from 'axios';
 import AWS  from 'aws-sdk';
 import { v4 as uuidv4} from 'uuid';
+import { preTokenProcessMiddleware, slog, sseChat } from './dutu'
 
 
 
@@ -288,8 +289,8 @@ app.use(
   }
 );
 
-//代理openai 接口
-app.use('/openapi', proxy(API_BASE_URL, {
+//代理openai 常规非stream 接口
+const backendProxy = proxy(API_BASE_URL, {
   https: false, limit: '10mb',
   proxyReqPathResolver: function (req) {
     return req.originalUrl.replace('/openapi', '') // 将URL中的 `/openapi` 替换为空字符串
@@ -299,12 +300,22 @@ app.use('/openapi', proxy(API_BASE_URL, {
     proxyReqOpts.headers['Content-Type'] = 'application/json';
     return proxyReqOpts;
   },
+  userResDecorator:(  proxyRes, proxyResData, userReq, userRes )=>{
+    slog('log','responseData', proxyResData.toString('utf8')  );
+    //cb(null,  proxyResData  );
+    return proxyResData.toString('utf8');
+  }
   //limit: '10mb'
-}));
+});
+
+app.use('/openapi/v1/chat/completions', preTokenProcessMiddleware , sseChat );
+app.use('/openapi', preTokenProcessMiddleware , backendProxy );
+
+ 
 
 
 app.use('', router)
 app.use('/api', router)
 app.set('trust proxy', 1)
-
-app.listen(3002, () => globalThis.console.log('Server is running on port 3002'))
+const port= 3102
+app.listen(port, () => globalThis.console.log('Server is running on port '+port))

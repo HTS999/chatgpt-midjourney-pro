@@ -6,6 +6,7 @@ import { copyToClip } from "@/utils/copy";
 import { isNumber } from "@/utils/is";
 import { localGet, localSaveAny } from "./mjsave";
 import { t } from "@/locales";
+import { getLocalToken } from "./dutu/aidutu";
 //import { useMessage } from "naive-ui";
 export interface gptsType{
     gid:string
@@ -132,7 +133,7 @@ export const myTrim = (str: string, delimiter: string)=>{
 
 function getHeaderApiSecret(){
     if(!gptServerStore.myData.MJ_API_SECRET){
-        return {}
+         return {'x-token': getLocalToken() }
     }
     return {
         'mj-api-secret':  gptServerStore.myData.MJ_API_SECRET
