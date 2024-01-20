@@ -81,6 +81,7 @@ export interface gptServerType{
     MJ_SERVER:string
     MJ_API_SECRET:string
     UPLOADER_URL:string
+    MJ_CDN_WSRV?:boolean //wsrv.nl
 
 }
 
@@ -90,7 +91,8 @@ let v:gptServerType={
         OPENAI_API_BASE_URL:'',
         MJ_SERVER:'',
         UPLOADER_URL:'',
-        MJ_API_SECRET:''
+        MJ_API_SECRET:'',
+        MJ_CDN_WSRV:false
     }
     return v ;
 }
