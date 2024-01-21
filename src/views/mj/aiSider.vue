@@ -4,7 +4,7 @@ import { SvgIcon ,HoverButton} from '@/components/common'
 import { useBasicLayout } from '@/hooks/useBasicLayout'
 const { isMobile } = useBasicLayout()
 import { NAvatar,NTooltip } from 'naive-ui'
-import { homeStore, useUserStore } from '@/store'
+import { homeStore, useUserStore,useChatStore } from '@/store'
 import defaultAvatar from '@/assets/avatar.jpg'
 
 //import gallery from '@/views/gallery/index.vue'
@@ -23,13 +23,14 @@ const goHome =computed(  () => {
   //router.push('/')
   return router.currentRoute.value.name
 });
-//mlog('g', goHome() );
+const chatStore = useChatStore()
+const chatId= computed(()=>chatStore.active??'1002' );
 </script>
 <template>
 <div class="flex-shrink-0 w-[60px] z-[1000]  h-full" v-if="!isMobile">
     <div class="flex h-full select-none flex-col items-center justify-between bg-[#e8eaf1] px-2 pt-4 pb-8 dark:bg-[#25272d]">
         <div class="flex flex-col space-y-4 flex-1">
-            <a href="#/chat"    @click="st.active='chat'" class="router-link-active router-link-exact-active h-12 w-12 cursor-pointer rounded-xl bg-white duration-300 dark:bg-[#34373c] hover:bg-[#bbb] dark:hover:bg-[#555]">
+            <a :href="`#/chat/${chatId}`"    @click="st.active='chat'" class="router-link-active router-link-exact-active h-12 w-12 cursor-pointer rounded-xl bg-white duration-300 dark:bg-[#34373c] hover:bg-[#bbb] dark:hover:bg-[#555]">
                 <n-tooltip placement="right" trigger="hover">
                   <template #trigger> 
                     <div  class="flex h-full justify-center items-center py-1 flex-col " :class="[ goHome =='Chat' ? 'active' : '']">
@@ -53,7 +54,7 @@ const goHome =computed(  () => {
             </a>
 
 
-            <a href="#/draw" @click="st.active='draw'" class=" router-link-exact-active h-12 w-12 cursor-pointer rounded-xl bg-white duration-300 dark:bg-[#34373c] hover:bg-[#bbb] dark:hover:bg-[#555]">
+            <a :href="`#/draw/${chatId}`" @click="st.active='draw'" class=" router-link-exact-active h-12 w-12 cursor-pointer rounded-xl bg-white duration-300 dark:bg-[#34373c] hover:bg-[#bbb] dark:hover:bg-[#555]">
                 <n-tooltip placement="right" trigger="hover">
                   <template #trigger> 
                     <div  class="flex h-full justify-center items-center   py-1 flex-col" :class="[goHome=='draw' ? 'active' : '']">
