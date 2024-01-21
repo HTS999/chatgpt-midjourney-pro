@@ -29,5 +29,6 @@ coverage
 *.sw?
 
 # Environment variables files
+.env
 /service/.env
 /service/uploads

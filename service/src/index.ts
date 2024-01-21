@@ -16,7 +16,7 @@ import FormData  from 'form-data'
 import axios from 'axios';
 import AWS  from 'aws-sdk';
 import { v4 as uuidv4} from 'uuid';
-import { preTokenProcessMiddleware, slog, sseChat } from './dutu'
+import { preTokenProcessMiddleware, slog, sseChat,endResDecorator, rz2mq } from './dutu'
 
 
 
@@ -260,8 +260,9 @@ app.post('/openapi/pre_signed', (req, res) => {
 
 app.use(
   '/openapi/v1/audio/transcriptions',
-  upload2.single('file'),
+  upload2.single('file'),preTokenProcessMiddleware,
   async (req, res, next) => {
+    let  rzData= {}
     //console.log( "boday",req.body ,  req.body.model );
     if(req.file.buffer) {
       const fileBuffer = req.file.buffer;
@@ -278,14 +279,19 @@ app.use(
         })   ;
         // console.log('responseBody', responseBody.data  );
        res.json(responseBody.data );
+       rzData=responseBody.data
+       
       }catch(e){
         //console.log('goog',e );
+        rzData= {error: e }
         res.status( 400 ).json( {error: e } );
       }
 
     }else{
-      res.status(400).json({'error':'uploader fail'});
+      rzData= {'error':'uploader fail'}
+      res.status(400).json(rzData);
     }
+    rz2mq('cnt',{ from:'cnt',url: req.originalUrl,header:req.headers, body:req.body ,data: rzData });
   }
 );
 
@@ -300,11 +306,7 @@ const backendProxy = proxy(API_BASE_URL, {
     proxyReqOpts.headers['Content-Type'] = 'application/json';
     return proxyReqOpts;
   },
-  userResDecorator:(  proxyRes, proxyResData, userReq, userRes )=>{
-    slog('log','responseData', proxyResData.toString('utf8')  );
-    //cb(null,  proxyResData  );
-    return proxyResData.toString('utf8');
-  }
+  userResDecorator:endResDecorator
   //limit: '10mb'
 });
 

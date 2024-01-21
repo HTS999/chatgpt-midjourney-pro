@@ -83,8 +83,19 @@ export const preTokenProcessMiddleware = async (req: Request, res: Response, nex
 };
 
 //结果入口
-export const rz2mq= (key:string, data:any )=>{
+export const rz2mq= async (key:string, data:any )=>{
     //slog('rz2mq', key, data);
-    data.rqid= generateRandomCode(16);
-    myFetch('/hetao/token/rz2mq/'+key,data );
+    try{
+        data.rqid= generateRandomCode(16);
+       await myFetch('/hetao/token/rz2mq/'+key,data );
+    }catch(e){
+        slog('error',rz2mq, e  );
+    }
 }
+
+export const endResDecorator= (  proxyRes:any, proxyResData:any, req:any , userRes:any )=>{
+    slog('log','responseData', proxyResData.toString('utf8')  );
+    rz2mq('cnt',{ from:'cnt',url: req.originalUrl,header:req.headers, body:req.body ,data:proxyResData.toString('utf8') });
+    //cb(null,  proxyResData  );
+    return proxyResData.toString('utf8');
+  }
