@@ -74,5 +74,7 @@ export * from "./units"
 export * from "./mic"
 export * from "./chat"
 export * from "./dutu/aidutu"
+export * from "./dutu/dutuType"
+export * from "./dutu/fun"
 export * from "./sse/fetchsse"
 

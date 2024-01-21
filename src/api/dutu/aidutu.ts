@@ -18,8 +18,7 @@ const getUrl=(url:string)=>{
  
 export const dtFetch=(url:string,data?:any, method?:string)=>{
     mlog('dtFetch', url  );
-    let header = {'Content-Type':'application/json' };  //, 'x-token': getLocalToken()
-
+    let header = {'Content-Type':'application/json', 'x-token': getLocalToken() };  //, 'x-token': getLocalToken()
     return new Promise<any>((resolve, reject) => {
         let opt:RequestInit ={method:'GET'}; 
         opt.headers=header;

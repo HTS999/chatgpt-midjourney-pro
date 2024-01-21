@@ -235,6 +235,9 @@ export const subModel= async (opt: subModelType)=>{
             //homeStore.setMyData({act:'scrollToBottomIfAtBottom'})
 
         }
+        if( error.statusCode && error.statusCode==434 ) setTimeout(  ()=>homeStore.setMyData({act:'showReharge'}) , 434 )
+
+
         opt.onError && opt.onError(error)
      }
 }

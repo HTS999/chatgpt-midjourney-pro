@@ -5,7 +5,8 @@ import { useBasicLayout } from '@/hooks/useBasicLayout'
 const { isMobile } = useBasicLayout()
 import { NAvatar,NTooltip } from 'naive-ui'
 import { homeStore, useUserStore } from '@/store'
- 
+import defaultAvatar from '@/assets/avatar.jpg'
+
 //import gallery from '@/views/gallery/index.vue'
 
 const Setting = defineAsyncComponent(() => import('@/components/common/Setting/index.vue'))
@@ -98,8 +99,7 @@ const goHome =computed(  () => {
         <div class="flex flex-col  space-y-2 "> 
 
             
-            <NAvatar  size="large"  round  :src="userInfo.avatar"   v-if="userInfo.avatar"
-             class=" cursor-pointer"  />
+            <NAvatar  size="large"   round  :src="userInfo.avatar" @click="homeStore.setMyData({act:'showUserInfo'})"  :fallback-src="defaultAvatar"  class=" cursor-pointer"  />
             
             <HoverButton>
                 <div class="text-xl text-[#4f555e] dark:text-white flex h-full justify-center items-center "  @click="st.show = true">

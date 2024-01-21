@@ -116,7 +116,7 @@ export const sseChat= async ( req: Request, response: Response, next: NextFuncti
      try{
         const model= req.body.model??'gpt-3.5-turbo';
         const messages = req.body.messages as ChatMessage[];
-        const usage= countUsage(messages, arrDataString, model  );
+        const usage= await countUsage(messages, arrDataString, model  );
         rz2mq('chat', {usage,header:req.headers, body:req.body,url:req.url,completion:arrDataString});
      }catch (error:any ) {
         slog('error','入库出错')
