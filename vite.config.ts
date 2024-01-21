@@ -46,6 +46,15 @@ export default defineConfig((env) => {
           changeOrigin: true, // 允许跨域
           rewrite: path => path.replace('/vapi/', '/'),
         },
+
+        '/mjapi/mj/task': {
+          target: viteEnv.VITE_MJ_SERVER,
+          changeOrigin: true, // 允许跨域
+          rewrite: path => path.replace('/mjapi/', '/'),
+          headers:{
+            'Authorization':`Basic ${viteEnv.VITE_MJ_API_SECRET}`
+          }
+        },
         '/mjapi': {
           target: viteEnv.VITE_APP_API_BASE_URL,
           changeOrigin: true, // 允许跨域

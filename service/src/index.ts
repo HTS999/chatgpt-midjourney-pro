@@ -16,7 +16,7 @@ import FormData  from 'form-data'
 import axios from 'axios';
 import AWS  from 'aws-sdk';
 import { v4 as uuidv4} from 'uuid';
-import { preTokenProcessMiddleware, slog, sseChat,endResDecorator, rz2mq } from './dutu'
+import { preTokenProcessMiddleware, slog, sseChat,endResDecorator, rz2mq, preMjapi,mp3time } from './dutu'
 
 
 
@@ -118,13 +118,13 @@ router.post('/verify', async (req, res) => {
     ? process.env.OPENAI_API_BASE_URL
     : 'https://api.openai.com'
 
-app.use('/mjapi', proxy(process.env.MJ_SERVER?process.env.MJ_SERVER:'https://api.openai.com', {
+app.use('/mjapi',preTokenProcessMiddleware, preMjapi , proxy(process.env.MJ_SERVER?process.env.MJ_SERVER:'https://api.openai.com', {
   https: false, limit: '10mb',
   proxyReqPathResolver: function (req) {
     return req.originalUrl.replace('/mjapi', '') // 将URL中的 `/mjapi` 替换为空字符串
   },
   proxyReqOptDecorator: function (proxyReqOpts, srcReq) {
-    proxyReqOpts.headers['mj-api-secret'] = process.env.MJ_API_SECRET;
+    proxyReqOpts.headers['Authorization'] = `Basic ${process.env.MJ_API_SECRET}` ;
     proxyReqOpts.headers['Content-Type'] = 'application/json';
     return proxyReqOpts;
   },
@@ -279,8 +279,8 @@ app.use(
         })   ;
         // console.log('responseBody', responseBody.data  );
        res.json(responseBody.data );
-       rzData=responseBody.data
-       
+       const mp3={mp3:await mp3time( fileBuffer) }
+       rzData={...responseBody.data,...mp3};
       }catch(e){
         //console.log('goog',e );
         rzData= {error: e }

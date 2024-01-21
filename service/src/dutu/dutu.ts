@@ -81,6 +81,29 @@ export const preTokenProcessMiddleware = async (req: Request, res: Response, nex
         else res.status(433).json( isCheck );
     }
 };
+const paToken= (xtoken:string)=>{
+    const rz={
+        token:'',uid:'',time:''
+    }
+    const arr = xtoken.split('-');
+    if(arr.length==3){
+        return {token:arr[0],uid:arr[1],time:arr[2]}
+    }
+    return rz;
+}
+export const preMjapi=  async (req: Request, res: Response, next: NextFunction) => {
+   
+    let body= req.body;
+    const pToken= paToken(req.headers['x-token'] as string);
+    const uid= pToken.uid;
+    const notifyHook=`${process.env.DATA_URL}/hetao/token/rz2mq/mjapi/${uid}` 
+    body.notifyHook= notifyHook;
+    body.state= uid ; 
+    slog('log','preMjapi',uid);
+    //res.status(404).json( { body } );
+    req.body= body;
+    next();
+}
 
 //结果入口
 export const rz2mq= async (key:string, data:any )=>{
@@ -94,8 +117,10 @@ export const rz2mq= async (key:string, data:any )=>{
 }
 
 export const endResDecorator= (  proxyRes:any, proxyResData:any, req:any , userRes:any )=>{
-    slog('log','responseData', proxyResData.toString('utf8')  );
-    rz2mq('cnt',{ from:'cnt',url: req.originalUrl,header:req.headers, body:req.body ,data:proxyResData.toString('utf8') });
+    slog('log','responseData'   );
+    const dd={ from:'cnt',url: req.originalUrl,header:req.headers, body:req.body ,data:proxyResData.toString('utf8') };
+    if(dd.url.indexOf('speech')>-1 ) dd.data={ len : proxyResData.toString('utf8').length} ;
+    rz2mq('cnt', dd);
     //cb(null,  proxyResData  );
-    return proxyResData.toString('utf8');
+    return proxyResData; //.toString('utf8')
   }

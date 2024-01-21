@@ -43,6 +43,9 @@ dependencies:
   isomorphic-fetch:
     specifier: ^3.0.0
     version: 3.0.0
+  mp3-duration:
+    specifier: ^1.1.0
+    version: 1.1.0
   multer:
     specifier: 1.4.5-lts.1
     version: 1.4.5-lts.1
@@ -865,6 +868,18 @@ packages:
     resolution: {integrity: sha512-jDctJ/IVQbZoJykoeHbhXpOlNBqGNcwXJKJog42E5HDPUwQTSdjCHdihjj0DlnheQ7blbT6dHOafNAiS8ooQKA==}
     engines: {node: '>=8'}
     dev: true
+
+  /bluebird-co@2.2.0(bluebird@3.7.2):
+    resolution: {integrity: sha512-p8EZTlGgWO6lUZkWbtmK90zhKNGy4CY9rLUUlI6aApZH0U7lAaJTb/KxkH2nHjKNpktN+iWtikXzAM+Z2dQJ5g==}
+    peerDependencies:
+      bluebird: ^3.x
+    dependencies:
+      bluebird: 3.7.2
+    dev: false
+
+  /bluebird@3.7.2:
+    resolution: {integrity: sha512-XpNj6GDQzdfW+r2Wnn7xiSAd7TM3jzkxGXBGTtWKuSXv1xUV+azxAm8jdWZN06QTQk+2N2XB9jRDkvbmQmcRtg==}
+    dev: false
 
   /body-parser@1.20.1:
     resolution: {integrity: sha512-jWi7abTbYwajOytWCQc37VulmWiRae5RyTpaCyDcS5/lMdtwSz5lOpDE67srw/HYe35f1z3fDQw+3txg7gNtWw==}
@@ -2836,6 +2851,14 @@ packages:
     hasBin: true
     dependencies:
       minimist: 1.2.8
+    dev: false
+
+  /mp3-duration@1.1.0:
+    resolution: {integrity: sha512-5zO6ZLEHEPb1Da5p+et7zsMQ0pt0x2YCZLyUPayBqLMhLPQt3fFAXxvCyznZZQnhXCeIX99tXhvQocm8+VmpvA==}
+    engines: {node: '>=0.11.0'}
+    dependencies:
+      bluebird: 3.7.2
+      bluebird-co: 2.2.0(bluebird@3.7.2)
     dev: false
 
   /ms@2.0.0:
