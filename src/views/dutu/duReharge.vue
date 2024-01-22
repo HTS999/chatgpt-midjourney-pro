@@ -2,13 +2,15 @@
 import { ajax, mlog } from '@/api';
 import { ref,watch } from 'vue'
 import QrcodeVue from 'qrcode.vue';
-import { NButton } from 'naive-ui';
-import { useBasicLayout } from '@/hooks/useBasicLayout'
+import { NButton,useMessage } from 'naive-ui';
+import { useBasicLayout } from '@/hooks/useBasicLayout' 
 
 const { isMobile } = useBasicLayout()
 const isWechat = ref( /MicroMessenger/i.test(navigator.userAgent) ); //是否在微信内
 const payConfig= ref<{qr:any[], msgFoot:string, msgHead:string,index:number}>({ qr:[], msgFoot:'', msgHead:'',index:-1});
 const st= ref({isLoad:true,qrurl:''});
+const emit = defineEmits(['success']);
+const ms = useMessage();
 const loadQrPay= ()=>{
     st.value.isLoad = true;
     ajax({url:'/hetao/pay/config'}).then( (d:any )=> {
@@ -28,6 +30,17 @@ const goSelect = (k:number)=>{
        const qrurl= payConfig.value.qr[k].url
        goUrl( qrurl );
     }
+}
+const gzCheck= ()=>{
+    ajax({url:'/hetao/pay/check'}).then( (d:any )=> {
+        st.value.isLoad = false;
+        //mlog('check', d );
+        if(d.data.cf.cnt>0) {
+            ms.success(d.data.cf.msg); 
+            emit('success');
+        }
+        else ms.info(d.data.cf.msg);
+    }).catch( ()=> st.value.isLoad = false );
 }
 loadQrPay();
 
@@ -55,7 +68,7 @@ loadQrPay();
         </div>
          
         <div class="py-2">
-            <NButton  type="primary" ghost  >我已充值成功 刷新</NButton>
+            <NButton  type="primary" ghost  @click="gzCheck()" >我已充值成功 刷新</NButton>
         </div>
          <div class="py-2" v-if="isWechat">
             <NButton  type="info" @click="goUrl(st.qrurl)"  >去付款</NButton>

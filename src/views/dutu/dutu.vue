@@ -1,9 +1,9 @@
 <script setup lang="ts">
 import { watch ,ref } from 'vue'
 import {homeStore} from "@/store";
-import { mlog } from '@/api';
+import { mlog ,logout} from '@/api';
 import { useBasicLayout } from '@/hooks/useBasicLayout'
-import {NDrawer ,NDrawerContent } from "naive-ui"
+import {NDrawer ,NDrawerContent,useMessage } from "naive-ui"
 
 import WeixinLogin from './weixinLogin.vue';
 import MyDrawer from './myDrawer.vue';
@@ -12,15 +12,20 @@ import DuUserInfo from './duUserInfo.vue'
 
 const { isMobile } = useBasicLayout();
 const st = ref({showLogin:false,showReharge:false,showUserInfo:false });
-watch(()=>homeStore.myData.act,(n)=>{
+const ms= useMessage();
+watch(()=>homeStore.myData.act, async (n)=>{
     mlog('autu', n  );
     if(n=='showLogin'){ //需要登录 显示登录二维码
         mlog('🐞 showLogin');
         st.value.showLogin= true;
     }else if( n=='showUserInfo' ){
-        st.value.showUserInfo= true;
+        if(homeStore.myData.isLogin) st.value.showUserInfo= true;
+        else  st.value.showLogin= true;
     }else if( n=='showReharge' ){
         st.value.showReharge= true;
+    }else if(n=='gologout'){
+        await logout();
+        ms.success( '退出成功');
     }
 },{deep:true})
 
@@ -33,6 +38,7 @@ const getCls=()=>{
     // }
     return isMobile.value? '!h-[70vh]':'!w-[640px]'
  }
+ mlog('dutuing'  );
 </script>
 <template>
     <MyDrawer v-model:model-value="st.showLogin"  :class="getCls()"  title="微信登录">

@@ -3,8 +3,9 @@ import { computed, nextTick,ref  } from 'vue'
 import { HoverButton, SvgIcon } from '@/components/common'
 import { gptConfigStore, homeStore, useAppStore, useChatStore } from '@/store'
 import { useBasicLayout } from '@/hooks/useBasicLayout'
-import {NModal} from "naive-ui"
+import {NModal,NButton} from "naive-ui"
 import aiModel from "@/views/mj/aiModel.vue"
+import Avatar from '../Message/Avatar.vue'
 
 const { isMobile } = useBasicLayout()
 
@@ -68,7 +69,11 @@ const st = ref({isShow:false});
       >
         {{ currentChatHistory?.title ?? '' }}
       </h1>
-      <div class="flex items-center space-x-2">
+      <div class="flex items-center mr-2  rounded-full overflow-hidden" v-if="isMobile"  @click="homeStore.setMyData({act:'showUserInfo'})">
+         <!-- <NButton type="warning" size="small" @click="homeStore.setMyData({act:'showUserInfo'})">我的</NButton> -->
+         <Avatar :image="true"   />
+      </div>
+      <div v-else  class="flex items-center space-x-2">
         <HoverButton @click="handleExport">
           <span class="text-xl text-[#4f555e] dark:text-white">
             <SvgIcon icon="ri:download-2-line" />

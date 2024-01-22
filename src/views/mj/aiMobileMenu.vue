@@ -45,10 +45,14 @@ watch(()=>homeStore.myData.act, (n:string)=>{
         <SvgIcon icon="ic:outline-palette" class="text-3xl"></SvgIcon>
         <div class="text-[13px]">{{$t('mjtab.draw')}}</div>
       </div>
-      <div class="flex items-center justify-center flex-col " @click="homeStore.setMyData({act:'gallery'})" >
+      <!-- <div class="flex items-center justify-center flex-col " @click="homeStore.setMyData({act:'gallery'})" >
         <SvgIcon icon="material-symbols:imagesmode-outline" class="text-3xl"></SvgIcon>
         <div class="text-[13px]">{{$t('mjtab.gallery')}}</div>
-      </div> 
+      </div> -->
+      <div class="flex items-center justify-center flex-col " @click="homeStore.setMyData({act:'showReharge'})" >
+        <SvgIcon icon="emojione:gem-stone" class="text-3xl"></SvgIcon>
+        <div class="text-[13px]">充值</div>
+      </div>  
   </div>
 
   <n-drawer v-model:show="st.show" :height="650"  placement="bottom">

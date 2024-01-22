@@ -1,7 +1,9 @@
 import { homeStore } from "@/store";
 import { ls } from "@/utils/storage"
 import { mlog } from "../mjapi";
+import { useMessage } from "naive-ui";
 const LC_NAME='gpt-mid-token'
+const ms= useMessage();
 export const getLocalToken= ()=>{
     const token = ls.get(LC_NAME);
     return token??'1-1-1';
@@ -37,7 +39,17 @@ export const dtFetch=(url:string,data?:any, method?:string)=>{
 }
 
 export function ajax({ url="",method='GET',data=undefined}): Promise<any> {
-    return dtFetch(url, data, method )
+    return new Promise<any>((resolve, reject) => {
+        dtFetch(url, data, method ).then((d:any)=>{
+            if(d.error>0) {
+                mlog('error',d.error_des );
+                //ms.info(d.error_des );
+                reject(d);
+                return ;
+            }
+            resolve(d);
+        }).catch(e=>reject(e))
+    }) 
 }
 
 export const getTokenFormServer= async ()=>{
@@ -47,4 +59,13 @@ export const getTokenFormServer= async ()=>{
         saveLocalToken(d.data.user.token) //data.user.token
         homeStore.setMyData({isLogin:true, token: d.data.user.token})
    }
+}
+
+export const logout= async()=>{
+     const d= await  ajax({url:'/hetao/token/logout'});
+     if( d.error==0 ){ 
+         const token= '1-1-1'
+         saveLocalToken(token);
+         homeStore.setMyData({isLogin:false, token,act:'' })
+     }
 }

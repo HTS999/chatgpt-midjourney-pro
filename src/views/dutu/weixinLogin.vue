@@ -14,7 +14,7 @@ const st =  ref({timeout:0 ,cnt: 0});
 
 
 const loadQr= ()=>{
-	ajax({url:'/oauth/weixin/damai'}).then(d=> {
+	ajax({url:'/oauth/weixin/chat'}).then(d=> {
 		console.log('wx',d )
 		qr.value.url= d.data.rz.url //data.rz.url
 		qr.value.checkUrl= d.data.rz.checkUrl //data.rz.url
