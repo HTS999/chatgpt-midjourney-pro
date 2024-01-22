@@ -256,7 +256,7 @@ const clearAll=()=>{
                 <div  style="max-width: 240px;">
                 <p v-html="$t('mjchat.imgCInfo')"></p>
                 
-                3.<a class="text-green-500 cursor-pointer"  @click="fsRef.click()" v-html="$t('mjchat.imgCadd')"></a><br/> 
+                <a class="text-green-500 cursor-pointer"  @click="fsRef.click()" v-html="$t('mjchat.imgCadd')"></a><br/> 
                 <div  v-if="st.fileBase64.length>0" class="flex justify-start items-baseline">
                     <div class="p-1" v-for="(v ) in st.fileBase64">
                         <img  class="w-[60px]" :src="v">

@@ -19,6 +19,8 @@ import drawListVue from '../mj/drawList.vue'
 import aiGPT from '../mj/aiGpt.vue'
 import AiSiderInput from '../mj/aiSiderInput.vue'
 import aiGptInput from '../mj/aiGptInput.vue'
+import DuChatNull from '../dutu/duChatNull.vue'
+
 
 let controller = new AbortController()
 
@@ -504,13 +506,15 @@ watch( ()=>loading.value ,(n)=> homeStore.setMyData({isLoader:n }))
           class="w-full max-w-screen-xl m-auto dark:bg-[#101014]"
           :class="[isMobile ? 'p-2' : 'p-4']"
         >
-          <template v-if="!dataSources.length">
+        
+          <!-- <template v-if="!dataSources.length">
             <div v-if="homeStore.myData.session.notify" v-html="homeStore.myData.session.notify" class="text-neutral-300 mt-4"></div>
             <div class="flex items-center justify-center mt-4 text-center text-neutral-300" v-else>
               <SvgIcon icon="ri:bubble-chart-fill" class="mr-2 text-3xl" />
               <span>Aha~</span>
             </div>
-          </template>
+          </template> -->
+          <DuChatNull v-if="!dataSources.length"/>
           <template v-else>
             <div>
               <Message

@@ -35,6 +35,11 @@ const { uuid } = route.params as { uuid: string }
 const dataSources = computed(() => chatStore.getChatByUuid(+uuid))
 
 const handleSubmit = ( ) => {
+    if( ! homeStore.myData.isLogin ) {
+        ms.error('请先登录' );
+        homeStore.setMyData({'act':'showLogin'});
+        return ;
+    }
     if( mvalue.value==''  ) return ;
     if(checkDisableGpt4(gptConfigStore.myData.model)){
         ms.error( t('mj.disableGpt4') );

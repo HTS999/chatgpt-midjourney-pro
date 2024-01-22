@@ -53,15 +53,20 @@ watch(()=>homeStore.myData.isLogin,  loadUserInfo );
             <div class="uinfo" ><svgIcon icon="ri:account-box-line"></svgIcon> 已积分:{{userInfo.use_fen}}</div>  
             <div class="uinfo" ><svgIcon icon="ri:account-box-line"></svgIcon> 掉用次数:{{userInfo.cnt}}</div>  
         </div> -->
-        <div class="p-2 justify-between items-center flex">
+        <div class="p-2  justify-between items-center " :class="[isMobile?'':'flex']">
             <div class="uinfo" >
                 <svgIcon icon="ri:account-box-line"></svgIcon> 
                 <span>UID:{{userInfo?.user_id}}</span>
                 <div class="px-2 cursor-pointer"  @click="homeStore.setMyData({act:'gologout'})">
                     <NTag size="small" type="success" round :bordered="false"  class="!cursor-pointer" >退出</NTag>
                 </div>
+                <div v-if="userInfo.endtime>0">
+                    <NTag size="small" type="success" round :bordered="false">
+                    到期:{{timeFormat(userInfo.endtime,'yyyy-MM-dd hh:mm')}}
+                    </NTag>
+                </div>
             </div>  
-            <NButton type="warning" @click="goPay">充值续费</NButton>
+            <NButton type="warning" @click="goPay" v-if="!isMobile">充值续费</NButton>
         </div>
         <div class="grid  gap-4 justify-center text-center" :class="[isMobile?'grid-cols-2':'grid-cols-4']">
             <NCard size="small">
