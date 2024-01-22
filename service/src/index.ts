@@ -258,6 +258,7 @@ app.post('/openapi/pre_signed', (req, res) => {
   });
 });
 
+//whisper
 app.use(
   '/openapi/v1/audio/transcriptions',
   upload2.single('file'),preTokenProcessMiddleware,

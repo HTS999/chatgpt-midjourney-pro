@@ -9,9 +9,10 @@ import WeixinLogin from './weixinLogin.vue';
 import MyDrawer from './myDrawer.vue';
 import DuReharge from './duReharge.vue';
 import DuUserInfo from './duUserInfo.vue'
+import DuPrice from './duPrice.vue';
 
 const { isMobile } = useBasicLayout();
-const st = ref({showLogin:false,showReharge:false,showUserInfo:false });
+const st = ref({showLogin:false,showReharge:false,showUserInfo:false,showPrice:false });
 const ms= useMessage();
 watch(()=>homeStore.myData.act, async (n)=>{
     mlog('autu', n  );
@@ -21,6 +22,8 @@ watch(()=>homeStore.myData.act, async (n)=>{
     }else if( n=='showUserInfo' ){
         if(homeStore.myData.isLogin) st.value.showUserInfo= true;
         else  st.value.showLogin= true;
+    }else if( n=='showPrice' ){
+        st.value.showPrice= true;
     }else if( n=='showReharge' ){
         st.value.showReharge= true;
     }else if(n=='gologout'){
@@ -51,6 +54,10 @@ const getCls=()=>{
      :placement="isMobile?'bottom':'right'" >
       <NDrawerContent   title="个人信息"><DuUserInfo @close="st.showUserInfo=false" v-if="st.showUserInfo" /></NDrawerContent>
         
+    </NDrawer>
+    <NDrawer v-model:show="st.showPrice"  :class="[isMobile?'!h-[75vh]':'!w-[80%]']"
+     :placement="isMobile?'bottom':'right'" >
+       <NDrawerContent   title="模型价格"><DuPrice v-if="st.showPrice" @success="st.showPrice=false" /></NDrawerContent>
     </NDrawer>
 
         

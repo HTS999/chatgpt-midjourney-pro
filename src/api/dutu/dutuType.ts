@@ -12,4 +12,5 @@ export interface userInfoType{
     "cz_amount":number
     "cz_cnt": number
     "cz_time": number
+    "now":number
 }

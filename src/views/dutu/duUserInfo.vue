@@ -57,12 +57,21 @@ watch(()=>homeStore.myData.isLogin,  loadUserInfo );
             <div class="uinfo" >
                 <svgIcon icon="ri:account-box-line"></svgIcon> 
                 <span>UID:{{userInfo?.user_id}}</span>
-                <div class="px-2 cursor-pointer"  @click="homeStore.setMyData({act:'gologout'})">
-                    <NTag size="small" type="success" round :bordered="false"  class="!cursor-pointer" >退出</NTag>
+                <div  class="!px-2">
+                    <NTag size="small" type="success" round :bordered="false" >
+                        <div class="cursor-pointer flex justify-center items-center"  
+                            @click="homeStore.setMyData({act:'gologout'})">
+                            <svgIcon icon="ri:logout-circle-r-line"></svgIcon> <span>退出</span> 
+                        </div>
+                    </NTag>
                 </div>
+               
                 <div v-if="userInfo.endtime>0">
-                    <NTag size="small" type="success" round :bordered="false">
+                    <NTag size="small" type="info" round :bordered="false" v-if="userInfo.endtime>userInfo.now">
                     到期:{{timeFormat(userInfo.endtime,'yyyy-MM-dd hh:mm')}}
+                    </NTag>
+                    <NTag size="small" type="error" round :bordered="false" v-else> 
+                        积分已到期
                     </NTag>
                 </div>
             </div>  
@@ -86,7 +95,16 @@ watch(()=>homeStore.myData.isLogin,  loadUserInfo );
                 <div>充值金额</div>
             </NCard> 
         </div>
-        <div class="pt-4" v-if="logsList.length>0" >
+        <div class="uinfo py-2" >
+            <div class="cursor-pointer"  @click="homeStore.setMyData({act:'showPrice'})">
+                <NTag size="small" type="success" round :bordered="false"  class="!cursor-pointer" >
+                    <div class="flex justify-center items-center">
+                        <svgIcon icon="ri:money-dollar-box-line"/> <span>各模型价格</span>
+                    </div>
+                </NTag>
+            </div>
+        </div>
+        <div   v-if="logsList.length>0" >
             <n-table striped size="small">
             <thead>
                 <tr>
