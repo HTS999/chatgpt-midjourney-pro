@@ -38,7 +38,8 @@ loadPrice();
 
     <ul class="p-6">
         说明：
-        <li>1千Tokens约380汉字</li> 
+        <li>1000token约400字，750词</li> 
+        <li>问题和答案都算字数</li> 
     </ul>
 </div>
 </template>
