@@ -2,8 +2,9 @@
 import { ajax, mlog } from '@/api';
 import { ref,watch } from 'vue'
 import QrcodeVue from 'qrcode.vue';
-import { NButton,useMessage } from 'naive-ui';
+import { NButton,useMessage,NTag } from 'naive-ui';
 import { useBasicLayout } from '@/hooks/useBasicLayout' 
+import { homeStore } from '@/store';
 
 const { isMobile } = useBasicLayout()
 const isWechat = ref( /MicroMessenger/i.test(navigator.userAgent) ); //是否在微信内
@@ -56,10 +57,20 @@ loadQrPay();
     </div>
   </div>
 </div>
+<div class="uinfo py-2" >
+    <div class="cursor-pointer"  @click="homeStore.setMyData({act:'showPrice'})">
+        <NTag size="small" type="success" round :bordered="false"  class="!cursor-pointer" >
+            <div class="flex justify-center items-center">
+                <svgIcon icon="ri:money-dollar-box-line"/> <span>各模型价格</span>
+            </div>
+        </NTag>
+    </div>
+</div>
 <div class="flex justify-center items-center h-[200px] pt-4" v-if="payConfig.qr.length">
     <div class=" w-[180px] h-[180px]  rounded-md  bg-white flex justify-center items-center" >
                 <qrcode-vue :value="st.qrurl" :size="150" level="H" />
     </div>
+    
     <div class="m-2 flex flex-col justify-start items-start">
          
         <div style="color: #999999">

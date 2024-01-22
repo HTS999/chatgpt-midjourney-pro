@@ -55,9 +55,9 @@ const getCls=()=>{
       <NDrawerContent   title="个人信息"><DuUserInfo @close="st.showUserInfo=false" v-if="st.showUserInfo" /></NDrawerContent>
         
     </NDrawer>
-    <NDrawer v-model:show="st.showPrice"  :class="[isMobile?'!h-[75vh]':'!w-[80%]']"
-     :placement="isMobile?'bottom':'right'" >
-       <NDrawerContent   title="模型价格"><DuPrice v-if="st.showPrice" @success="st.showPrice=false" /></NDrawerContent>
+    <NDrawer v-model:show="st.showPrice"  :class="[isMobile?'!h-[75vh]':'!w-[600px]']"
+     :placement="isMobile?'bottom':'right'"  >
+       <NDrawerContent   title="模型价格" :closable="!isMobile"><DuPrice v-if="st.showPrice" @success="st.showPrice=false" /></NDrawerContent>
     </NDrawer>
 
         

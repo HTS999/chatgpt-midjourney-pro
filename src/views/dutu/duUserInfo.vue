@@ -104,8 +104,8 @@ watch(()=>homeStore.myData.isLogin,  loadUserInfo );
                 </NTag>
             </div>
         </div>
-        <div   v-if="logsList.length>0" >
-            <n-table striped size="small">
+        <div   v-if="logsList.length>0"  :style="[ isMobile?'margin: 0px -24px':'']">
+            <n-table striped size="small" :bordered="!isMobile">
             <thead>
                 <tr>
                
