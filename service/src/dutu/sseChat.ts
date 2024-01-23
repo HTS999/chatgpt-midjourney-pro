@@ -43,6 +43,7 @@ export const sseChat= async ( req: Request, response: Response, next: NextFuncti
     }
     let isWriteHeader= false;
     let arrDataString:string[]=[];
+    const stime= Date.now();
     const opt= {
         onMessage:(d:string)=>{
              
@@ -117,11 +118,11 @@ export const sseChat= async ( req: Request, response: Response, next: NextFuncti
         const model= req.body.model??'gpt-3.5-turbo';
         const messages = req.body.messages ;// as ChatMessage[];
         const usage= await countUsageV2(messages, arrDataString, model  );
-        rz2mq('chat', {from:'chat',usage,header:req.headers, body:req.body,url:req.originalUrl,completion:arrDataString});
+        rz2mq('chat', {from:'chat',stime, etime: Date.now(),usage,header:req.headers, body:req.body,url:req.originalUrl,completion:arrDataString});
      }catch (error:any ) {
         slog('error','入库出错')
         slog('error','入库', error )
-        rz2mq('error', {from:'error', header:req.headers, body:req.body,url:req.originalUrl,completion:arrDataString  });
+        rz2mq('error', {from:'error',stime,etime: Date.now(),  header:req.headers, body:req.body,url:req.originalUrl,completion:arrDataString  });
 
      }
      response.end();

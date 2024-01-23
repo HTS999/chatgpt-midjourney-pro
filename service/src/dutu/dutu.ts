@@ -118,7 +118,7 @@ export const rz2mq= async (key:string, data:any )=>{
 
 export const endResDecorator= (  proxyRes:any, proxyResData:any, req:any , userRes:any )=>{
     slog('log','responseData'   );
-    const dd={ from:'cnt',url: req.originalUrl,header:req.headers, body:req.body ,data:proxyResData.toString('utf8') };
+    const dd={ from:'cnt',etime: Date.now() ,url: req.originalUrl,header:req.headers, body:req.body ,data:proxyResData.toString('utf8') };
     if(dd.url.indexOf('speech')>-1 ) dd.data={ len : proxyResData.toString('utf8').length} ;
     rz2mq('cnt', dd);
     //cb(null,  proxyResData  );
