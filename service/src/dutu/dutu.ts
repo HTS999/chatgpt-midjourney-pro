@@ -122,5 +122,5 @@ export const endResDecorator= (  proxyRes:any, proxyResData:any, req:any , userR
     if(dd.url.indexOf('speech')>-1 ) dd.data={ len : proxyResData.toString('utf8').length} ;
     rz2mq('cnt', dd);
     //cb(null,  proxyResData  );
-    return proxyResData; //.toString('utf8')
+    return proxyResData; //.toString('utf8') 
   }
