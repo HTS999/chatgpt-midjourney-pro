@@ -1,7 +1,7 @@
 <script setup lang='ts'>
 import {onMounted, onUnmounted, ref} from "vue";
 import QrcodeVue from 'qrcode.vue';
-import {ajax, getTokenFormServer } from '@/api'; 
+import {ajax, getTokenFormServer, mlog } from '@/api'; 
 import { svgIcon } from "@/components/common";
  
 // import { useUserStore } from '@/api/store';
@@ -11,11 +11,16 @@ import { svgIcon } from "@/components/common";
 const $emit=defineEmits(['success','copy']);
 const qr =  ref({"url": "", 'checkUrl':''});
 const st =  ref({timeout:0 ,cnt: 0});
+const isWechat =   /MicroMessenger/i.test(navigator.userAgent) ; //是否在微信内
 
 
 const loadQr= ()=>{
-	ajax({url:'/oauth/weixin/chat'}).then(d=> {
-		console.log('wx',d )
+	ajax({url:'/oauth/weixin/chat?f=htv2'}).then(d=> {
+		mlog('wx',d )
+		if(isWechat && d.data.wxLoginUrl){
+			location.href= d.data.wxLoginUrl; 
+			return ;
+		}
 		qr.value.url= d.data.rz.url //data.rz.url
 		qr.value.checkUrl= d.data.rz.checkUrl //data.rz.url
 		//this.check();
@@ -25,11 +30,11 @@ const loadQr= ()=>{
 const check = ()=>{
 	if( st.value.timeout ) return ;
 	ajax({url: qr.value.checkUrl}).then(d=>{
-		console.log('check', st.value.cnt  ); //djj/user/logout
+		mlog('check', st.value.cnt  ); //djj/user/logout
 		st.value.cnt++;
 		if(d.data.rz.user_id){
 			$emit('success');
-			console.log('登录成功') //djj/user/logout 登出
+			mlog('登录成功') //djj/user/logout 登出
 			//uStore.updateUserInfo({isLogin:true})
 			//getCookieUserInfo()
             getTokenFormServer();

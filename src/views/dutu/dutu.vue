@@ -25,7 +25,8 @@ watch(()=>homeStore.myData.act, async (n)=>{
     }else if( n=='showPrice' ){
         st.value.showPrice= true;
     }else if( n=='showReharge' ){
-        st.value.showReharge= true;
+        if( !homeStore.myData.isLogin) st.value.showLogin= true;
+        else st.value.showReharge= true;
     }else if(n=='gologout'){
         await logout();
         ms.success( '退出成功');
