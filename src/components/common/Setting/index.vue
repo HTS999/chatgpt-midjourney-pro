@@ -8,6 +8,7 @@ import aiSetServer from '@/views/mj/aiSetServer.vue'
 import About from './About.vue'
 import { homeStore, useAuthStore } from '@/store'
 import { SvgIcon } from '@/components/common'
+import DuSetOther from '@/views/dutu/duSetOther.vue'
 
 interface Props {
   visible: boolean
@@ -62,7 +63,7 @@ const show = computed({
           </div>
         </NTabPane>
 
-        <NTabPane name="server" tab="server" v-if=" ! homeStore.myData.session.isHideServer">
+        <!-- <NTabPane name="server" tab="server" v-if=" ! homeStore.myData.session.isHideServer">
           <template #tab>
             <SvgIcon class="text-lg" icon="mingcute:server-line" />
             <span class="ml-2">{{ $t('mjset.server') }}</span>
@@ -72,10 +73,16 @@ const show = computed({
         <NTabPane name="Config" tab="Config">
           <template #tab>
             <SvgIcon class="text-lg" icon="ri:list-settings-line" />
-            <!-- <span class="ml-2">{{ $t('setting.config') }}</span> -->
             <span class="ml-2">{{ $t('mjset.about') }}</span>
           </template>
           <About />
+        </NTabPane> -->
+        <NTabPane name="server" tab="server"  >
+          <template #tab>
+            <SvgIcon class="text-lg" icon="mingcute:server-line" />
+            <span class="ml-2">其他</span>
+          </template>
+          <DuSetOther/>
         </NTabPane>
 
       </NTabs>
