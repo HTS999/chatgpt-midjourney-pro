@@ -52,7 +52,7 @@
 | OPENAI_API_MODEL |  默认模型 | gpt-3.5-turbo  | ✅ |  ✅|
 | MJ_SERVER |  mj proxy 接口地址 | https://api.openai.com  | ✅ |  ✅|
 | MJ_API_SECRET |  mj proxy | 空  | ✅ |  ✅|
-| AUTH_SECRET_KEY |  验证密码 | 无  | ✅ |  ✅|
+| AUTH_SECRET_KEY |  访问授权密码 | 无  | ✅ |   x|
 | API_UPLOADER |  支持上传 | 关闭  | ✅ |  x|
 | HIDE_SERVER |  前端ui隐藏服务端|    | ✅ |  x|
 | CUSTOM_MODELS |  自定义可选模型 | 无  | ✅ |  ✅|
@@ -60,6 +60,10 @@
 | TJ_GOOGLE_ID |  谷歌统计ID | 无  | ✅ |  ✅|
 | SYS_NOTIFY |  系统通知，支持HTML | 无  | ✅ |  ✅|
 | DISABLE_GPT4 |  禁用GPT-4 | 无  | ✅ |  ✅|
+| GPT_URL | 自定 GPT_URL=/gpts.json  | 无 也可自己的外链 | ✅ |  ✅|
+| UPLOAD_IMG_SIZE | gpt4v 上传图片大小 |  1 | ✅ |  ✅|
+| SYS_THEME | 默认主题 `light`或者`dark`  | dark | ✅ |  ✅|
+  
 
 ## docker 部署
 **假设**:

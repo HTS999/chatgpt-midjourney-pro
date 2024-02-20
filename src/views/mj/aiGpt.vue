@@ -2,8 +2,9 @@
 import { computed,   ref,watch  } from 'vue' 
 import { useRoute } from 'vue-router'
 import { useChat } from '../chat/hooks/useChat' 
-import { gptConfigStore, homeStore, useChatStore } from '@/store'
-import { getInitChat, mlog, subModel,getSystemMessage , localSaveAny, canVisionModel, isTTS, subTTS, file2blob, whisperUpload, getHistoryMessage, localGet, checkDisableGpt4, chatSetting } from '@/api'
+import {  homeStore, useChatStore } from '@/store'
+import { getInitChat, mlog, subModel,getSystemMessage , localSaveAny, canVisionModel
+    ,isTTS, subTTS, file2blob, whisperUpload, getHistoryMessage, checkDisableGpt4, chatSetting } from '@/api'
 //import { isNumber } from '@/utils/is'
 import { useMessage  } from "naive-ui";
 import { t } from "@/locales";
@@ -44,14 +45,18 @@ watch( ()=>textRz.value, (n)=>{
 },{deep:true}) 
 const { uuid } = useRoute().params as { uuid: string }
 watch(()=>homeStore.myData.act, async (n)=>{
+
+   
+    
     if(n=='gpt.submit' ||  n=='gpt.whisper'  ){
         
         const dd:any = homeStore.myData.actData;
-        mlog('gpt.submit', dd , dd.uuid) ;
+       
         let  uuid2 =  dd.uuid?? uuid;
         st.value.uuid =  uuid2 ;
         const chatSet = new chatSetting(   +st.value.uuid  );
         const nGptStore =   chatSet.getGptConfig()  ; 
+         mlog('gpt.submit', dd , dd.uuid,  nGptStore ) ;
         let model = nGptStore.model ;//gptConfigStore.myData.model
 
         if(checkDisableGpt4( model )){
@@ -129,8 +134,14 @@ watch(()=>homeStore.myData.act, async (n)=>{
             model ,
             myid: `${Date.now()}` 
         }
-        if(gptConfigStore.myData.gpts){
-            outMsg.logo= gptConfigStore.myData.gpts.logo ;
+        // if(gptConfigStore.myData.gpts){
+        //     outMsg.logo= gptConfigStore.myData.gpts.logo ;
+        // }
+        //  const chatSet = new chatSetting(   +st.value.uuid  );
+        // const nGptStore =   chatSet.getGptConfig()  ;
+        //chatSet
+        if( nGptStore.gpts ){
+            outMsg.logo= nGptStore.gpts.logo ;
         }
         addChat(  +uuid2, outMsg  )
         st.value.index= dataSources.value.length - 1;
@@ -216,7 +227,10 @@ watch(()=>homeStore.myData.act, async (n)=>{
         st.value.index= actData.index;
         st.value.uuid= actData.uuid;
         ms.info( t('mj.ttsLoading'));
-        subTTS({model:'tts-1',input: actData.text }).then(d=>{
+        const chatSet = new chatSetting(   +st.value.uuid  );
+        const nGptStore =   chatSet.getGptConfig()  ; 
+
+        subTTS({model:'tts-1',input: actData.text , voice:nGptStore.tts_voice }).then(d=>{
                 ms.success( t('mj.ttsSuccess'));
                 mlog('subTTS',d );
                 //d.player.play(); 
@@ -243,6 +257,8 @@ watch(()=>homeStore.myData.act, async (n)=>{
 
 const submit= (model:string, message:any[] ,  opt?:any )=>{
     mlog('提交Model', model  );
+    const chatSet = new chatSetting(   +st.value.uuid  );
+    const nGptStore =   chatSet.getGptConfig()  ; 
     controller.value = new AbortController();
         if(model=='whisper-1'){
             
@@ -266,7 +282,7 @@ const submit= (model:string, message:any[] ,  opt?:any )=>{
         else if( isTTS(model)){
             let text  = message[message.length-1].content;
             mlog('whisper-tts',  message[message.length-1] , text  ); 
-            subTTS({model,input: text }).then(d=>{
+            subTTS({model,input: text, voice:nGptStore.tts_voice }).then(d=>{
                 mlog('subTTS',d );
                 //d.player.play(); 
                 //textRz.value.push('ok');

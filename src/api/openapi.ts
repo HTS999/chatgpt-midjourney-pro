@@ -1,5 +1,5 @@
 
-import { gptConfigStore, gptServerStore, homeStore } from "@/store";
+import { gptConfigStore, gptServerStore, homeStore,useAuthStore } from "@/store";
 import { mlog,myTrim } from "./mjapi";
 import { fetchSSE } from "./sse/fetchsse";
 import axios from 'axios';
@@ -8,6 +8,7 @@ import { isNumber, isObject } from "@/utils/is";
 import { t } from "@/locales";
 import { ChatMessage } from "gpt-tokenizer/esm/GptEncoding";
 import { chatSetting } from "./chat";
+
 //import {encode,  encodeChat}  from "gpt-tokenizer"
 //import {encode,  encodeChat} from "gpt-tokenizer/cjs/encoding/cl100k_base.js";
 //import { get_encoding } from '@dqbd/tiktoken'
@@ -15,9 +16,11 @@ import { chatSetting } from "./chat";
 import {getLocalToken} from './dutu/aidutu';
 import { nextTick } from "vue";
 
+
 export const KnowledgeCutOffDate: Record<string, string> = {
   default: "2021-09",
   "gpt-4-1106-preview": "2023-04",
+  "gpt-4-0125-preview": "2023-04",
   "gpt-4-vision-preview": "2023-04",
 };
 
@@ -103,7 +106,16 @@ export const GptUploader =   ( url:string, FormData:FormData )=>{
 
 
 
-    if(gptServerStore.myData.OPENAI_API_BASE_URL && url.indexOf(gptServerStore.myData.OPENAI_API_BASE_URL)>-1  ) headers={...headers,...getHeaderAuthorization()}
+    if(gptServerStore.myData.OPENAI_API_BASE_URL && url.indexOf(gptServerStore.myData.OPENAI_API_BASE_URL)>-1  ) {
+        headers={...headers,...getHeaderAuthorization()}
+        //mlog("headers", headers );
+    }else{
+         const authStore = useAuthStore()
+        if( authStore.token ) {
+            const  header2={ 'x-ptoken':  authStore.token };
+            headers= {...headers, ...header2}
+        }
+    }
     return new Promise<any>((resolve, reject) => {
             axios.post( url , FormData, {
             headers
@@ -159,7 +171,13 @@ interface subModelType{
 }
 function getHeaderAuthorization(){
     if(!gptServerStore.myData.OPENAI_API_KEY){
+<<<<<<< HEAD
         return {'x-token': getLocalToken() }
+=======
+        const authStore = useAuthStore()
+        if( authStore.token ) return { 'x-ptoken':  authStore.token };
+        return {}
+>>>>>>> upstream/main
     }
     return {
         'Authorization': 'Bearer ' +gptServerStore.myData.OPENAI_API_KEY
@@ -291,7 +309,8 @@ export const subTTS = async (tts:ttsType )=>{
       throw new Error(`API request failed with status ${response.status}`);
     }
     const audioData = await response.arrayBuffer();
-    const blob = new Blob([audioData], { type: 'audio/mp3' });
+    const contentType = response.headers.get('Content-Type')
+    const blob = new Blob([audioData], { type: contentType??'audio/mpeg' });
     mlog('blob', blob);
     const saveID = await localSaveAny( blob );
     const pp= await bolbObj(blob );
@@ -410,7 +429,7 @@ const getModelMax=( model:string )=>{
     model= model.toLowerCase();
     if( model.indexOf('8k')>-1  ){
         return 8;
-    }else if( model.indexOf('16k')>-1 || model=='gpt-3.5-turbo-1106' ){
+    }else if( model.indexOf('16k')>-1 || model=='gpt-3.5-turbo-1106' || model=='gpt-3.5-turbo-0125' ){
         return 16;
     }else if( model.indexOf('32k')>-1  ){
         return 32;

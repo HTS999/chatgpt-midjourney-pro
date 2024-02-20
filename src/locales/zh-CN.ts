@@ -166,7 +166,11 @@ export default {
     ,img2textinfo:'不知如何写提示词？用图生文试试！<br/>提交图片，出提示词'
     ,traning:'翻译中...'
     ,imgcreate:'生成图片'
+<<<<<<< HEAD
     ,imginfo:'其他参数：  <li>1 --no 忽略 --no car 图中不出现车 </li><li>2 --seed 可先获取种子 --seed 123456 </li> <li>3 --chaos 10 混合(范围：0-100)</li> <li>4 --tile 碎片化 </li> <li style="color:#f2c97d">5 不要输入敏感内容(政治相关、色情、血腥、暴恐等) 一经发现将积分清零</li>'
+=======
+    ,imginfo:'其他参数：  <li>1 --no 忽略 --no car 图中不出现车 </li><li>2 --seed 可先获取种子 --seed 123456 </li> <li>3 --chaos 10 混合(范围：0-100)</li> <li>4 --tile 碎片化 </li>  <li>5 --sref 图片url 生成风格一致的图像  </li> '
+>>>>>>> upstream/main
     ,tStyle:'风格'
     ,tView:'视角'
     ,tShot:'人物镜头'
@@ -181,7 +185,7 @@ export default {
     ,blendStart:'开始合成'
     ,no2add:'请勿重复添加图片'
     ,add2more:'请添加两张以上图片'
-    ,no1m:'图片大小不能超过1M'
+    ,no1m:'图片大小不能超过{m}M'
     ,imgExt:'图片仅支持jpg,gif,png,jpeg格式'
   },
   mj:{
@@ -275,6 +279,12 @@ export default {
     ,presence_penaltyInfo:'(presence_penalty)值越大，越有可能扩展到新话题'
     ,frequency_penalty:'频率惩罚度'
     ,frequency_penaltyInfo:' (frequency_penalty)值越大，越有可能降低重复字词'
+
+    ,tts_voice:'TTS 语音人物'
+    ,typing:'正在输入'
+
+    ,authErro:'授权失败'
+    ,authBt:'请重新输入授权访问密码'
   }
   ,ai:{  
    sanLogin:'请使用微信扫一扫 关注并登录'

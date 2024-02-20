@@ -15,11 +15,16 @@ const nGptStore = ref(  chatSet.getGptConfig() );
 
 const config = ref({
 model:[ 'gpt-4-0125-preview','gpt-3.5-turbo',`gpt-4-1106-preview`,`gpt-3.5-turbo-16k`,'gpt-4','gpt-4-0613','gpt-4-32k-0613' ,'gpt-4-32k','gpt-4-32k-0314',`gpt-3.5-turbo-16k-0613`
-,`gpt-4-vision-preview`,`gpt-3.5-turbo-1106` 
+,`gpt-4-vision-preview`,`gpt-3.5-turbo-1106` ,'gpt-3.5-turbo-0125'
 ,'gpt-3.5-turbo-0301','gpt-3.5-turbo-0613','gpt-4-all','gpt-3.5-net','gemini-pro']
 ,maxToken:2048
 }); 
 const st= ref({openMore:false });
+const voiceList= computed(()=>{
+    let rz=[];
+    for(let o of "alloy,echo,fable,onyx,nova,shimmer".split(/[ ,]+/ig))rz.push({label:o,value:o}) 
+    return rz;
+});
 const modellist = computed(() => { //
     let rz =[ ];
     for(let o of config.value.model){
@@ -175,6 +180,10 @@ onMounted(() => {
     </section>
     <div class="mb-4 text-[12px] text-gray-300 dark:text-gray-300/20">{{ $t('mj.frequency_penaltyInfo') }}</div>
 
+    <section class="mb-4 flex justify-between items-center"  >
+        <div >{{ $t('mj.tts_voice') }}</div>
+        <n-select v-model:value="nGptStore.tts_voice" :options="voiceList" size="small"  class="!w-[50%]"   />
+    </section>
 
 
 </template>
