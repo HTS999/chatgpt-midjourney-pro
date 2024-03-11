@@ -18,7 +18,10 @@ import { nextTick } from "vue";
 export const KnowledgeCutOffDate: Record<string, string> = {
   default: "2021-09",
   "gpt-4-1106-preview": "2023-04",
+  "gpt-4-0125-preview": "2023-04",
   "gpt-4-vision-preview": "2023-04",
+  "claude-3-opus-20240229": "2023-08",
+  "claude-3-sonnet-20240229": "2023-08",
 };
 
 const getUrl=(url:string)=>{
@@ -175,7 +178,9 @@ export const getSystemMessage = (uuid?:number )=>{
     }
     if(  sysTem ) return sysTem;
     let model= gptConfigStore.myData.model?gptConfigStore.myData.model: "gpt-3.5-turbo";
-      const DEFAULT_SYSTEM_TEMPLATE = `You are ChatGPT, a large language model trained by OpenAI.
+    let producer= 'You are ChatGPT, a large language model trained by OpenAI.'
+    if(model.includes('claude-3')) producer=  'You are Claude, a large language model trained by Anthropic.';
+      const DEFAULT_SYSTEM_TEMPLATE = `${producer}
 Knowledge cutoff: ${KnowledgeCutOffDate[model]}
 Current model: ${model}
 Current time: ${ new Date().toLocaleString()}
@@ -422,7 +427,9 @@ const getModelMax=( model:string )=>{
     || model=='gpt-4-vision-preview' ){
         return 128; 
     }else if( model.indexOf('gpt-4')>-1  ){  
-        max=8;
+     max=8;
+    }else if( model.toLowerCase().includes('claude-3') ){
+        return 120;
     }
 
     return max;

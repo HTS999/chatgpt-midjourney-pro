@@ -16,7 +16,9 @@ const nGptStore = ref(  chatSet.getGptConfig() );
 const config = ref({
 model:[ 'gpt-4-0125-preview','gpt-3.5-turbo',`gpt-4-1106-preview`,`gpt-3.5-turbo-16k`,'gpt-4','gpt-4-0613','gpt-4-32k-0613' ,'gpt-4-32k','gpt-4-32k-0314',`gpt-3.5-turbo-16k-0613`
 ,`gpt-4-vision-preview`,`gpt-3.5-turbo-1106` 
-,'gpt-3.5-turbo-0301','gpt-3.5-turbo-0613','gpt-4-all','gpt-3.5-net','gemini-pro']
+,'gpt-3.5-turbo-0301','gpt-3.5-turbo-0613','gpt-4-all','gpt-3.5-net','gemini-pro'
+,'claude-3-sonnet-20240229','claude-3-opus-20240229'
+]
 ,maxToken:2048
 }); 
 const st= ref({openMore:false });
@@ -78,6 +80,8 @@ watch(()=>nGptStore.value.model,(n)=>{
         max=4096;
     }else if( n.indexOf('gpt-4')>-1 ||  n.indexOf('16k')>-1 ){ //['16k','8k','32k','gpt-4'].indexOf(n)>-1
         max=4096*2;
+    }else if( n.toLowerCase().includes('claude-3') ){
+         max=4096*2;
     }
     config.value.maxToken=max/2;
     if(nGptStore.value.max_tokens> config.value.maxToken ) nGptStore.value.max_tokens= config.value.maxToken;
