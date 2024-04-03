@@ -255,11 +255,13 @@ export const subTask= async (data:any, chat:Chat.Chat )=>{
         "notifyHook": "",
         "prompt": data.drawText,
         "state": "",
-        botType:'MID_JOURNEY'
+        botType:'MID_JOURNEY',
+        "accountFilter": { "modes": ["FAST"]}
         };
         if(data.bot && data.bot=='NIJI_JOURNEY'){
             toData.botType= data.bot;
         }
+
         d=  await mjFetch('/mj/submit/imagine' ,toData );
         mlog('submit',d );
         //return ;
