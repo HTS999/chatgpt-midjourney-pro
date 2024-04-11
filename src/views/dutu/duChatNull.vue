@@ -3,13 +3,19 @@ import { ajax, mlog } from '@/api';
 import { homeStore } from '@/store';
 import { ref } from 'vue';
 import { NButton } from 'naive-ui'
-const st =ref({isLoader:false});
+
+import duplusItem from './duPlusItem.vue'
+
+const st =ref({isLoader:false });
+const cShare = ref({cnt:0,msg:''})
 const config= ref({msg:''});
 const loadStart= ()=>{
     ajax({url:'/hetao/token/chatstart'}).then( (d:any )=> {
         st.value.isLoader=true;
         mlog('dd',d );
         config.value= d.data.conf ;
+       cShare.value = d.data.share ;
+
     });
 }
 loadStart();
@@ -24,6 +30,10 @@ loadStart();
             <NButton type="info"  v-else @click="homeStore.setMyData({act:'showReharge'})" >续费充值</NButton>
             
         </div>
+    </div>
+    <div v-if="cShare.cnt >0 ">
+        <div v-html="cShare.msg"></div>
+        <duplusItem  :csize="cShare.cnt "/>  
     </div>
 </div>
 

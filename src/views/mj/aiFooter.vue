@@ -2,6 +2,7 @@
 import aiGpts from "./aiGpts.vue"
 import aiGallery from "./aiGallery.vue" 
 import dutu from '../dutu/dutu.vue'
+import duPlusList  from "../dutu/duPlusList.vue"
 import { homeStore } from "@/store"
 import { getTokenFormServer } from "@/api"
 
@@ -9,6 +10,7 @@ import { getTokenFormServer } from "@/api"
 const goInit=()=>{
     //if(/MicroMessenger/i.test(navigator.userAgent)  ){
     if( !homeStore.myData.isLogin  ) getTokenFormServer();
+     
 }
 goInit();
 </script>
@@ -16,4 +18,5 @@ goInit();
 <aiGpts/>
 <aiGallery/>
 <dutu/>
+<duPlusList/>
 </template>
