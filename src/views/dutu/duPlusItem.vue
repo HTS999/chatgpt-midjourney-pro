@@ -67,7 +67,7 @@ initLoad();
 <template> 
    <div class="p-2">
         <div class="grid grid-cols-2 gap-5 md:grid-cols-3 lg:grid-cols-4"  >
-                <div @click="go(v)" v-for="v in list" class="group relative    rounded-2xl bg-[#e8eaf1] p-5 dark:bg-neutral-600 cursor-pointer ">
+                <div @click="go(v)" v-for="v in list" class="group relative    rounded-2xl bg-[#e8eaf1] lg:p-5  p-3   dark:bg-neutral-600 cursor-pointer ">
                     
                     <div class="flex justify-between items-center">
                         <div class="space-x-2">
@@ -77,7 +77,7 @@ initLoad();
                         </div>
                         <div  >{{ v.carID }}</div>
                     </div>
-                    <div class="pt-5 text-[12px] text-center flex justify-center items-center w-full"> 
+                    <div class=" lg:pt-5  pt-3  text-[12px] text-center flex justify-center items-center w-full"> 
                         <img :src="`https://img.closeai.biz/endpoint?url=${encodeURIComponent(st.host+'/endpoint?carid='+v.carID)}`"/>
                     </div>
                 </div>
