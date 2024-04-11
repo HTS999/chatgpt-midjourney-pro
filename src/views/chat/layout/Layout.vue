@@ -33,8 +33,7 @@ if(rt.name =='GPTs'){
   ms.success( t('mj.modleSuccess') );
 }
 else if( rt.name=='plus'){
-  ms.success( 'plus yes');
-  //homeStore.setMyData({act:'showplus'});
+   
   setTimeout(()=> homeStore.setMyData({act:'showplus'}),300)
 }
 
