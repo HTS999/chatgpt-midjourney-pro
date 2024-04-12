@@ -60,6 +60,21 @@ const routes: RouteRecordRaw[] = [
     ],
   },
 
+   {
+    path: '/',
+    name: 'chongzhi',
+    component: ChatLayout,
+    redirect: '/chongzhi',
+    children: [
+      {
+        path: '/chongzhi/:uuid?',
+        name: 'chongzhi',
+        component: () => import('@/views/chat/index.vue'),
+      },
+    ],
+  },
+  
+
   {
     path: '/s',
     name: 's',

@@ -32,11 +32,12 @@ if(rt.name =='GPTs'){
   gptConfigStore.setMyData({model:model});
   ms.success( t('mj.modleSuccess') );
 }
-else if( rt.name=='plus'){
-   
+else if( rt.name=='plus'){ 
   setTimeout(()=> homeStore.setMyData({act:'showplus'}),300)
 }
-
+else if( rt.name=='chongzhi'){ 
+  setTimeout(()=>  homeStore.setMyData({act:'showReharge'}) ,300)
+}
  
 
 router.replace({ name: 'Chat', params: { uuid: chatStore.active } })
