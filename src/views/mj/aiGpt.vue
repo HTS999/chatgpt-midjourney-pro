@@ -3,7 +3,7 @@ import { computed,   ref,watch  } from 'vue'
 import { useRoute } from 'vue-router'
 import { useChat } from '../chat/hooks/useChat' 
 import { gptConfigStore, homeStore, useChatStore } from '@/store'
-import { getInitChat, mlog, subModel,getSystemMessage , localSaveAny, canVisionModel, isTTS, subTTS, file2blob, whisperUpload, getHistoryMessage, localGet, checkDisableGpt4, chatSetting } from '@/api'
+import { getInitChat, mlog, subModel,getSystemMessage , localSaveAny, canVisionModel, isTTS, subTTS, file2blob, whisperUpload, getHistoryMessage, localGet, checkDisableGpt4, chatSetting, isCanBase64Model, canBase64Model } from '@/api'
 //import { isNumber } from '@/utils/is'
 import { useMessage  } from "naive-ui";
 import { t } from "@/locales";
@@ -61,8 +61,9 @@ watch(()=>homeStore.myData.act, async (n)=>{
         
         let promptMsg = getInitChat(dd.prompt );
         if( dd.fileBase64 && dd.fileBase64.length>0 ){ 
-            if( !canVisionModel(model)  ) model='gpt-4-vision-preview';
-        
+           // if( !canVisionModel(model) && !isCanBase64Model(model)  ) model='gpt-4-vision-preview'; //model
+            if( !canVisionModel(model)  )  model= canBase64Model(model)//model='gpt-4-vision-preview';
+
             try{
                     let images= await localSaveAny( JSON.stringify( dd.fileBase64)  ) ;
                     mlog('key', images );
@@ -143,7 +144,8 @@ watch(()=>homeStore.myData.act, async (n)=>{
         let message= [ {  "role": "system", "content": getSystemMessage(  +uuid2) },
                 ...historyMesg ];
         if( dd.fileBase64 && dd.fileBase64.length>0 ){
-            if(  model=='gpt-4-vision-preview' ){
+            //if(  model=='gpt-4-vision-preview' ){
+            if(  isCanBase64Model(model ) ){ //isCanBase64Model
                 let obj={
                         "role": "user",
                         "content": [] as any
