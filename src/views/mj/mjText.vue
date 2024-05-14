@@ -159,6 +159,8 @@ const bt= [
     ,{k:'reroll::0',n: t('mjchat.reroll')}
     ,{k:'upsample_v5_2x',n:t('mj.up2')}
     ,{k:'upsample_v5_4x',n:t('mj.up4')} 
+    ,{k:'upsample_v6_2x',n:t('mj.up2')}
+    ,{k:'upsample_v6_4x',n:t('mj.up4')} 
     ]
 ]
 
