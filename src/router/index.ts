@@ -4,6 +4,7 @@ import { createRouter, createWebHashHistory } from 'vue-router'
 import { setupPageGuard } from './permission'
 import { ChatLayout } from '@/views/chat/layout'
 import mjlayout from '@/views/mj/layout.vue'
+import sunoLayout from '@/views/suno/layout.vue'
 
 const routes: RouteRecordRaw[] = [
   {
@@ -100,6 +101,20 @@ const routes: RouteRecordRaw[] = [
         path: '/draw/:uuid?',
         name: 'draw',
         component: () => import('@/views/mj/draw.vue'),
+      },
+    ],
+  },
+
+  {
+    path: '/music',
+    name: 'music',
+    component: sunoLayout,
+    redirect: '/music/index',
+    children: [
+      {
+        path: '/music/:uuid?',
+        name: 'music',
+        component: () => import('@/views/suno/music.vue'),
       },
     ],
   },

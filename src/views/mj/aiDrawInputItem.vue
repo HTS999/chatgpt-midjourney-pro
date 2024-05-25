@@ -8,7 +8,7 @@ import { useBasicLayout } from '@/hooks/useBasicLayout'
 const { isMobile } = useBasicLayout()
 import AiMsg from './aiMsg.vue' 
 //import aiFace from './aiFace.vue' 
-import { mlog, train, upImg ,getMjAll } from '@/api' 
+import { mlog, train, upImg ,getMjAll, mjFetch } from '@/api' 
 //import {copyText3} from "@/utils/format";
 import { homeStore ,useChatStore} from "@/store";
 const chatStore = useChatStore()
@@ -22,9 +22,9 @@ const vf=[{s:'width: 100%; height: 100%;',label:'1:1'}
 ,{s:'width: 50%; height: 100%;',label:'9:16'}
  ];
 
-const f=ref({bili:-1, quality:'',view:'',light:'',shot:'',style:'', styles:'',version:'--v 5.2'});
+const f=ref({bili:-1, quality:'',view:'',light:'',shot:'',style:'', styles:'',version:'--v 6.0',sref:'',cref:'',cw:'',});
 const st =ref({text:'',isDisabled:false,isLoad:false
-    ,fileBase64:[],bot:'',showFace:false
+    ,fileBase64:[],bot:'',showFace:false,upType:''
 });
 const farr= [
 { k:'style',v:t('mjchat.tStyle') }
@@ -39,6 +39,8 @@ const farr= [
 const msgRef = ref()
 const fsRef= ref() 
 const fsRef2 = ref()
+const fsRef3 = ref()
+
 const $emit=defineEmits(['drawSent','close']);
 const props = defineProps({buttonDisabled:Boolean});
 
@@ -88,28 +90,36 @@ function drawSent(rz:any){
     $emit('drawSent', rz2 )
     st.value.fileBase64= [];
 }
+
 function createPrompt(rz:string){
     if( rz =='') {
         msgRef.value.showError(t('mjchat.placeInput') );
         return '';
     }
-     
-   
+
+ 
+    let rzp='' //参数组合字符串
+    let rzk=''; //描述词组合字符串
     for(let v of farr){
         if( ! f.value[v.k] || f.value[v.k]==null || f.value[v.k]=='' ) continue;
-         mlog('k ', rz,  f.value  );
-        if(v.k=='quality') rz +=`  --q ${f.value.quality}`;
-        else if(v.k=='styles') { if( f.value.styles ) rz +=` ${f.value.styles}`;}
+        mlog('k ', rz,  f.value  );
+        if(v.k=='quality') rzp +=`  --q ${f.value.quality}`;
+        else if(v.k=='styles') { if( f.value.styles ) rzp +=` ${f.value.styles} `;}
         else if(v.k=='version') {
             st.value.bot= '';
-           if(['MID_JOURNEY','NIJI_JOURNEY'].indexOf(f.value.version)>-1 ){
-                 st.value.bot= f.value.version ;
-           } else   rz +=` ${f.value.version}`;
+        if(['MID_JOURNEY','NIJI_JOURNEY'].indexOf(f.value.version)>-1 ){
+                st.value.bot= f.value.version ;
+        } else   rzp +=` ${f.value.version}`;
         }
-        else if( f.value[v.k] ) rz +=` , ${f.value[v.k]}`;
+        else if( f.value[v.k] ) rzk +=`${f.value[v.k]},`;
     }
+
     mlog('createPrompt ', rz,  f.value  );
-    if(f.value.bili>-1) rz +=` --ar ${vf[f.value.bili].label}`;
+    if( f.value.sref.trim() != '' ) rzp += ` --sref ${f.value.sref}`
+    if( f.value.cref.trim() != '' ) rzp += ` --cref ${f.value.cref}`
+    if( f.value.cw && f.value.cw!='' ) rzp += ` --cw ${f.value.cw}`
+    if (f.value.bili > -1) rzp += ` --ar ${vf[f.value.bili].label}` 
+    rz = rzk + rz +rzp;
     return rz ;
 }
  
@@ -199,15 +209,65 @@ const exportToTxt= async ()=>{
 }
 const clearAll=()=>{
     //f.value
-    Object.keys(f.value).map(k=>f.value[k]='');
-    f.value.bili= -1;
+    // Object.keys(f.value).map(k=>f.value[k]='');
+    // f.value.bili= -1;
+    st.value.fileBase64=[];
+    st.value.text='';
+    f.value.bili=-1;
+    f.value.version='';
+    f.value.quality='';
+    f.value.shot='';
+    f.value.light='';
+    f.value.style='';
+    f.value.styles='';
+    f.value.view='';
+    f.value.cref='';
+    f.value.cw='';
+    f.value.sref='';
 }
 //const config=
+
+const uploader=(type:string)=>{
+    st.value.upType= type;
+    fsRef3.value.click();
+}
+const selectFile3=  (input:any)=>{
+    ms.loading('上传中...');
+    upImg(input.target.files[0]).then( async(d)=>{
+        mlog('selectFile3>> ',d );
+        let data={
+            action:'img2txt',
+            data:{
+                "base64Array":[d]
+            }
+        }
+        //homeStore.setMyData({act:'draw',actData:obj});
+        //input.value.value='';
+        try{
+            d=  await mjFetch('/mj/submit/upload-discord-images' , data.data  );
+            mlog('selectFile3>> ',d );
+            fsRef3.value.value='';
+            if(d.code== 1){
+                if( st.value.upType=='cref'){
+                    f.value.cref= d.result[0];
+                }else{
+                    f.value.sref= d.result[0];
+                }
+                ms.success( t('mj.uploadSuccess'));
+            }
+        }catch(e ){
+            msgRef.value.showError(e)
+        }
+
+    })
+    .catch(e=>msgRef.value.showError(e))
+}
 </script>
 <template>
 <AiMsg ref="msgRef" />
 <input type="file"  @change="selectFile"  ref="fsRef" style="display: none" accept="image/jpeg, image/jpg, image/png, image/gif"/>
 <input type="file"  @change="selectFile2" ref="fsRef2" style="display: none" accept="image/jpeg, image/jpg, image/png, image/gif"/>
+<input type="file"  @change="selectFile3" ref="fsRef3" style="display: none" accept="image/jpeg, image/jpg, image/png, image/gif"/>
 
 <div class="overflow-y-auto bg-[#fafbfc] px-4 dark:bg-[#18181c] h-full ">
     
@@ -245,6 +305,24 @@ const clearAll=()=>{
     <n-select v-model:value="st.bot" :options="config.botList" size="small"  class="!w-[60%]" :clearable="true" />
 
      </section> -->
+
+    <section class="mb-4 flex justify-between items-center"  >
+    <div class="w-[45px]">sref</div>
+        <NInput v-model:value="f.sref" size="small" placeholder="图片url 生成风格一致的图像" clearable >
+                <template #suffix>
+                <SvgIcon icon="ri:upload-line"  class="cursor-pointer" @click="uploader('sref')"></SvgIcon>
+            </template>
+        </NInput>
+    </section>
+    <section class="mb-4 flex justify-between items-center"  >
+    <div class="w-[45px]">cref</div>
+        <NInput  v-model:value="f.cref" size="small" placeholder="图片url 生成角色一致的图像" clearable>
+            <template #suffix>
+                <SvgIcon icon="ri:upload-line" class="cursor-pointer"  @click="uploader('cref')"></SvgIcon>
+            </template>
+        </NInput>
+    </section>
+
     <div class="mb-1">
      <n-input    type="textarea"  v-model:value="st.text"   :placeholder="$t('mjchat.prompt')" round clearable maxlength="2000" show-count 
       :autosize="{   minRows:2, maxRows:5 }" />

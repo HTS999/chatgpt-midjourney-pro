@@ -18,6 +18,7 @@ const st= ref({'show':false,showImg:false, menu:[],active:'chat'})
 const userInfo = computed(() => userStore.userInfo)
 import { router } from '@/router'
 import { mlog } from "@/api";
+import { useRouter } from "vue-router";
 
 const goHome =computed(  () => {
   //router.push('/')
@@ -25,12 +26,13 @@ const goHome =computed(  () => {
 });
 const chatStore = useChatStore()
 const chatId= computed(()=>chatStore.active??'1002' );
+const urouter = useRouter() //
 </script>
 <template>
 <div class="flex-shrink-0 w-[60px] z-[1000]  h-full" v-if="!isMobile">
     <div class="flex h-full select-none flex-col items-center justify-between bg-[#e8eaf1] px-2 pt-4 pb-8 dark:bg-[#25272d]">
         <div class="flex flex-col space-y-4 flex-1">
-            <a :href="`#/chat/${chatId}`"    @click="st.active='chat'" class="router-link-active router-link-exact-active h-12 w-12 cursor-pointer rounded-xl bg-white duration-300 dark:bg-[#34373c] hover:bg-[#bbb] dark:hover:bg-[#555]">
+            <a   @click="st.active='chat'; urouter.push(`/chat`)" class="router-link-active router-link-exact-active h-12 w-12 cursor-pointer rounded-xl bg-white duration-300 dark:bg-[#34373c] hover:bg-[#bbb] dark:hover:bg-[#555]">
                 <n-tooltip placement="right" trigger="hover">
                   <template #trigger> 
                     <div  class="flex h-full justify-center items-center py-1 flex-col " :class="[ goHome =='Chat' ? 'active' : '']">
@@ -54,7 +56,7 @@ const chatId= computed(()=>chatStore.active??'1002' );
             </a>
 
 
-            <a :href="`#/draw/${chatId}`" @click="st.active='draw'" class=" router-link-exact-active h-12 w-12 cursor-pointer rounded-xl bg-white duration-300 dark:bg-[#34373c] hover:bg-[#bbb] dark:hover:bg-[#555]">
+            <a @click="st.active='draw'; urouter.push(`/draw`)" class=" router-link-exact-active h-12 w-12 cursor-pointer rounded-xl bg-white duration-300 dark:bg-[#34373c] hover:bg-[#bbb] dark:hover:bg-[#555]">
                 <n-tooltip placement="right" trigger="hover">
                   <template #trigger> 
                     <div  class="flex h-full justify-center items-center   py-1 flex-col" :class="[goHome=='draw' ? 'active' : '']">
@@ -81,18 +83,19 @@ const chatId= computed(()=>chatStore.active??'1002' );
             </a>
 
 
-            <!-- <section  class=" router-link-exact-active h-12 w-12 cursor-pointer rounded-xl bg-white duration-300 dark:bg-[#34373c] hover:bg-[#bbb] dark:hover:bg-[#555]"
+           
+            <a      @click="st.active='music'; urouter.push('/music')" class=" router-link-exact-active h-12 w-12 cursor-pointer rounded-xl bg-white duration-300 dark:bg-[#34373c] hover:bg-[#bbb] dark:hover:bg-[#555]"
              >
                 <n-tooltip placement="right" trigger="hover">
                   <template #trigger> 
-                    <div  class="flex  h-full justify-center items-center py-1 flex-col ">
-                      <SvgIcon icon="mingcute:grid-2-line" class="text-3xl flex-1"></SvgIcon>
-                      <span class="text-[10px]">画廊</span>
+                    <div  class="flex  h-full justify-center items-center py-1 flex-col " :class="[ goHome =='music' ? 'active' : '']">
+                      <SvgIcon icon="arcticons:wynk-music" class="text-3xl flex-1"></SvgIcon>
+                      <span class="text-[10px]">{{ $t('suno.menu') }}</span>
                     </div>  
                   </template>
-                    画廊:看看别人是如何画的
+                    {{ $t('suno.menuinfo') }}
                 </n-tooltip>                
-            </section> -->
+            </a>
 
              
 

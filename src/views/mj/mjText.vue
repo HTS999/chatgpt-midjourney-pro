@@ -168,6 +168,9 @@ const getIndex = (arr:any[], ib:any )=> arr.findIndex( (v9:any)=>v9.customId.ind
 const getIndexName=  (arr:any[], ib:any )=> {
   const i= getIndex( arr,ib);
   if(ib.k=='upsample_v5_2x') return ib.n;
+  if(ib.k=='upsample_v6_2x') return ib.n;
+//   if(ib.k=='upsample_v5_4x') return ib.n;
+//   if(ib.k=='upsample_v6_4x') return ib.n;
   return `${arr[i].emoji} ${ib.n}`;
 }
 

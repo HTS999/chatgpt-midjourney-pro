@@ -315,7 +315,30 @@ const backendProxy = proxy(API_BASE_URL, {
 app.use('/openapi/v1/chat/completions', preTokenProcessMiddleware , sseChat );
 app.use('/openapi', preTokenProcessMiddleware , backendProxy );
 
- 
+
+
+//代理sunoApi 接口 
+const sunoEndResDecorator= (  proxyRes:any, proxyResData:any, req:any , userRes:any )=>{
+    const dd={ from:'suno',etime: Date.now() ,url: req.originalUrl,header:req.headers, body:req.body ,data:proxyResData.toString('utf8') };
+    //http2mq( 'suno',dd )
+    rz2mq('suno', dd);
+    return proxyResData; //.toString('utf8') 
+}
+const sunoapiProxy = proxy(API_BASE_URL, {
+  https: false, limit: '10mb',
+  proxyReqPathResolver: function (req) {
+    return req.originalUrl.replace('/sunoapi', '') // 将URL中的 `/openapi` 替换为空字符串
+  },
+  proxyReqOptDecorator: function (proxyReqOpts, srcReq) {
+    //slog("rq: ",API_BASE_URL )
+    proxyReqOpts.headers['Authorization'] ='Bearer '+ process.env.OPENAI_API_KEY;
+    proxyReqOpts.headers['Content-Type'] = 'application/json';
+    return proxyReqOpts;
+  }, 
+  userResDecorator:sunoEndResDecorator// endResDecorator
+  
+});
+app.use('/sunoapi' ,preTokenProcessMiddleware, sunoapiProxy );
 
 
 app.use('', router)
