@@ -125,7 +125,8 @@ app.use('/mjapi',preTokenProcessMiddleware, preMjapi , proxy(process.env.MJ_SERV
     return req.originalUrl.replace('/mjapi', '') // 将URL中的 `/mjapi` 替换为空字符串
   },
   proxyReqOptDecorator: function (proxyReqOpts, srcReq) {
-    proxyReqOpts.headers['Authorization'] = `Basic ${process.env.MJ_API_SECRET}` ;
+    //proxyReqOpts.headers['Authorization'] = `Basic ${process.env.MJ_API_SECRET}` ;
+    proxyReqOpts.headers['Mj-Api-Secret'] = `${process.env.MJ_API_SECRET}` ;
     proxyReqOpts.headers['Content-Type'] = 'application/json';
     return proxyReqOpts;
   },
