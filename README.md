@@ -33,7 +33,7 @@
 - ✅ chatgpt 支持 GPTs 多模态
 - ✅ chatgpt 支持 tts whisper
 - ✅ 支持超链更换设置，适合 one-api 部署聊天（为了安全这种方式，请使用自己域名） https://cahtmj.youname.com/#/s/t?OPENAI_API_BASE_URL=https://abc.com&OPENAI_API_KEY=sk-xxxxx&MJ_SERVER=https://abc.com&MJ_API_SECRET=sk-xxx&UPLOADER_URL=
-- ✅ 支持one-api部署聊天（为了安全这种方式，安全这种方式请使用自己域名） https://cahtmj.youname.com/#/?settings={%22key%22:%22sk-abc%22,%22url%22:%22https://www.abc.com%22} `(v.2.14.3)`
+- ✅ 支持one-api部署聊天（为了安全这种方式，请使用自己域名） https://cahtmj.youname.com/#/?settings={%22key%22:%22sk-abc%22,%22url%22:%22https://www.abc.com%22} `(v.2.14.3)`
  
 
 ## 待开发
