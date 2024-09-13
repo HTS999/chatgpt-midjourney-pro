@@ -3,7 +3,7 @@ import { computed,   ref,watch  } from 'vue'
 import { useRoute } from 'vue-router'
 import { useChat } from '../chat/hooks/useChat' 
 import { gptConfigStore, homeStore, useChatStore } from '@/store'
-import { getInitChat, mlog, subModel,getSystemMessage , localSaveAny, canVisionModel, isTTS, subTTS, file2blob, whisperUpload, getHistoryMessage, localGet, checkDisableGpt4, chatSetting, isCanBase64Model, canBase64Model } from '@/api'
+import { getInitChat, mlog, subModel,getSystemMessage , localSaveAny, canVisionModel, isTTS, subTTS, file2blob, whisperUpload, getHistoryMessage, localGet, checkDisableGpt4, chatSetting, isCanBase64Model, canBase64Model, isNewModel } from '@/api'
 //import { isNumber } from '@/utils/is'
 import { useMessage  } from "naive-ui";
 import { t } from "@/locales";
@@ -143,6 +143,9 @@ watch(()=>homeStore.myData.act, async (n)=>{
         //return ;
         let message= [ {  "role": "system", "content": getSystemMessage(  +uuid2) },
                 ...historyMesg ];
+        if ( isNewModel( model ) ) {
+            message= [  ...historyMesg ];
+        }
         if( dd.fileBase64 && dd.fileBase64.length>0 ){
             //if(  model=='gpt-4-vision-preview' ){
             if(  isCanBase64Model(model ) ){ //isCanBase64Model
@@ -209,6 +212,9 @@ watch(()=>homeStore.myData.act, async (n)=>{
         controller.value = new AbortController();
         let message= [ {  "role": "system", "content": getSystemMessage(+st.value.uuid ) },
                 ...historyMesg ]; 
+        if ( isNewModel( model ) ) {
+            message= [  ...historyMesg ];
+        }
         textRz.value=[];
         submit(model, message );
 
@@ -294,7 +300,12 @@ const submit= (model:string, message:any[] ,  opt?:any )=>{
             ,uuid:st.value.uuid //当前会话
             ,onMessage:(d)=>{
                 mlog('🐞消息',d);
-                textRz.value.push(d.text);
+                //textRz.value.push(d.text);
+                if(d.isAll){
+                    textRz.value= [d.text];
+                }else{
+                    textRz.value.push(d.text);
+                }
             }
             ,onError:(e:any)=>{
                 mlog('onError',e)

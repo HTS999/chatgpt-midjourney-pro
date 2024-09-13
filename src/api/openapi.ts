@@ -164,7 +164,7 @@ export const subGPT= async (data:any, chat:Chat.Chat )=>{
 
 interface subModelType{
     message:any[]
-    onMessage:(d:{text:string,isFinish:boolean})=>void
+    onMessage:(d:{text:string,isFinish:boolean,isAll?:boolean})=>void
     onError?:(d?:any)=>void
     signal?:AbortSignal
     model?:string
@@ -199,6 +199,10 @@ Latex block: $$e=mc^2$$`;
 return DEFAULT_SYSTEM_TEMPLATE;
 
 }
+
+export const isNewModel=(model:string)=>{
+    return model.startsWith('o1-')
+}
 export const subModel= async (opt: subModelType)=>{
     //
     const model= opt.model?? ( gptConfigStore.myData.model?gptConfigStore.myData.model: "gpt-3.5-turbo");
@@ -217,7 +221,7 @@ export const subModel= async (opt: subModelType)=>{
     }
     if(model=='gpt-4-vision-preview' && max_tokens>2048) max_tokens=2048;
 
-    let body ={
+    let body:any ={
             max_tokens ,
             model ,
             temperature,
@@ -226,7 +230,18 @@ export const subModel= async (opt: subModelType)=>{
             "messages": opt.message
            ,stream:true
         }
-        //
+    if(isNewModel(model)){
+        body ={
+            max_completion_tokens:max_tokens ,
+            model ,
+            //temperature,
+            top_p,
+            presence_penalty ,frequency_penalty,
+            "messages": opt.message
+           ,stream:false
+        }
+    }
+    if(body.stream){ 
 
         let  headers ={
                 'Content-Type': 'application/json'
@@ -236,39 +251,52 @@ export const subModel= async (opt: subModelType)=>{
         headers={...headers,...getHeaderAuthorization()}
 
         try {
-         await fetchSSE( gptGetUrl('/v1/chat/completions'),{
-            method: 'POST',
-            headers: headers,
-            signal:opt.signal,
-            onMessage: async (data:string)=> {
-                 //mlog('🐞测试'  ,  data )  ;
-                 if(data=='[DONE]') opt.onMessage({text:'',isFinish:true})
-                 else {
-                    const obj= JSON.parse(data );
-                    opt.onMessage({text:obj.choices[0].delta?.content??'' ,isFinish:obj.choices[0].finish_reason!=null })
-                 }
-            },
-            onError(e ){
-                //console.log('eee>>', e )
-                mlog('❌未错误' ,e    )
-                opt.onError && opt.onError(e)
-            },
-            body:JSON.stringify(body)
-        });
-     } catch (error:any ) {
-        mlog('❌未错误2' ,error ,error.reason, error.statusCode , Object.keys(error)  )
-        if( error.statusCode && error.statusCode==431 ){
-            mlog('hello 431')
-           
-            setTimeout(  ()=>homeStore.setMyData({act:'showLogin'}) , 431 )
-            //homeStore.setMyData({act:'scrollToBottomIfAtBottom'})
+            await fetchSSE( gptGetUrl('/v1/chat/completions'),{
+                method: 'POST',
+                headers: headers,
+                signal:opt.signal,
+                onMessage: async (data:string)=> {
+                    //mlog('🐞测试'  ,  data )  ;
+                    if(data=='[DONE]') opt.onMessage({text:'',isFinish:true})
+                    else {
+                        const obj= JSON.parse(data );
+                        opt.onMessage({text:obj.choices[0].delta?.content??'' ,isFinish:obj.choices[0].finish_reason!=null })
+                    }
+                },
+                onError(e ){
+                    //console.log('eee>>', e )
+                    mlog('❌未错误' ,e    )
+                    opt.onError && opt.onError(e)
+                },
+                body:JSON.stringify(body)
+            });
+        } catch (error:any ) {
+            mlog('❌未错误2' ,error ,error.reason, error.statusCode , Object.keys(error)  )
+            if( error.statusCode && error.statusCode==431 ){
+                mlog('hello 431')
+            
+                setTimeout(  ()=>homeStore.setMyData({act:'showLogin'}) , 431 )
+                //homeStore.setMyData({act:'scrollToBottomIfAtBottom'})
 
+            }
+            if( error.statusCode && error.statusCode==434 ) setTimeout(  ()=>homeStore.setMyData({act:'showReharge'}) , 434 )
+
+
+            opt.onError && opt.onError(error)
         }
-        if( error.statusCode && error.statusCode==434 ) setTimeout(  ()=>homeStore.setMyData({act:'showReharge'}) , 434 )
-
-
-        opt.onError && opt.onError(error)
-     }
+    }else{
+        try {
+            mlog('🐞非流输出',body  )
+            opt.onMessage({text: t('mj.thinking') ,isFinish: false })
+            let obj :any= await gptFetch( '/v1/chat/completions',body  )
+            //mlog('结果 >>',obj   )
+            opt.onMessage({text:obj.choices[0].message.content??'' ,isFinish: true ,isAll:true})
+            
+        } catch (error ) {
+            mlog('❌未错误2',error  )
+            opt.onError && opt.onError(error)
+        }
+    }
 }
 
 export const getInitChat = (txt:string )=>{
@@ -289,6 +317,8 @@ export interface ttsType{
         voice?: string,
 
 }
+
+
 export const subTTS = async (tts:ttsType )=>{
     if(!tts.voice) tts.voice='alloy';
     let url= getUrl('/v1/audio/speech');
@@ -435,7 +465,8 @@ const getModelMax=( model:string )=>{
     }else if( model.indexOf('128k')>-1 
     || model=='gpt-4-1106-preview' 
     || model=='gpt-4-0125-preview' 
-    || model.indexOf('gpt-4o')
+    || model.indexOf('gpt-4o')>-1
+    || model.indexOf('o1-')>-1
     || model=='gpt-4-vision-preview' ){
         return 128; 
     }else if( model.indexOf('gpt-4')>-1  ){  

@@ -35,7 +35,62 @@ export const getStreamContent =( data:string)=>{
     }
 }
 
+
+export const gptFetch=(url:string,data?:any,opt2?:any )=>{
+    //mlog('gptFetch', url  );
+    let headers= {'Content-Type':'application/json'}
+    if(opt2 && opt2.headers ) headers= opt2.headers;
+
+    //headers={...headers,...getHeaderAuthorization()}
+    return new Promise<any>((resolve, reject) => {
+        let opt:RequestInit ={method:'GET'};
+        opt.headers= headers ;
+       
+        if(data) {
+            opt.body= JSON.stringify(data) ;
+            opt.method='POST';
+        }
+        fetch( `${API_BASE_URL}${url}` ,  opt ) //
+        .then(d=>d.json().then(d=> resolve(d))
+        .catch(e=>reject(e)))
+        .catch(e=>reject(e))
+    })
+
+}
+
+const noSseChat=async ( req: Request, response: Response, next: NextFunction )=>{
+   let  headers ={
+                'Content-Type': 'application/json'
+                ,'Authorization': 'Bearer ' +process.env.OPENAI_API_KEY 
+    }
+    const stime= Date.now();
+    let arrDataString:string[]=[];
+    try{
+      let d= await gptFetch('/v1/chat/completions', req.body,{headers} )
+      response.json( d )
+      //slog("log",'noSseChat>>', d )
+      //usage
+      let usage=  d.usage
+      if(  d.choices && d.choices.length>0 ) arrDataString= [d.choices[0].message.content]  
+      rz2mq('chat', {from:'chat',stime, etime: Date.now(),usage,header:req.headers, body:req.body,url:req.originalUrl,completion:arrDataString});
+
+    }catch(e){
+      response.writeHead(400 );
+      if( e.reason) response.end( e.reason);
+      else{
+          let obj={error:{"message":e.statusText,  "type":"openai_hk_error","code":e.status}}
+          response.end(  JSON.stringify(obj)  );
+      }
+      rz2mq('error', {from:'error',stime,etime: Date.now(),  header:req.headers, body:req.body,url:req.originalUrl,completion:arrDataString  });
+    }
+    
+  //response.json
+}
+
 export const sseChat= async ( req: Request, response: Response, next: NextFunction )=>{
+    if( !req.body.stream){
+      return noSseChat( req,response, next  )
+    }
     let  headers ={
                 'Content-Type': 'application/json'
                 ,'Authorization': 'Bearer ' +process.env.OPENAI_API_KEY
