@@ -84,12 +84,31 @@ export const gptConfigStore= reactive({
 
 
 export interface gptServerType{
-    OPENAI_API_KEY:string
+     OPENAI_API_KEY:string
     OPENAI_API_BASE_URL:string
     MJ_SERVER:string
     MJ_API_SECRET:string
     UPLOADER_URL:string
     MJ_CDN_WSRV?:boolean //wsrv.nl
+    SUNO_SERVER:string
+    SUNO_KEY:string
+    LUMA_SERVER:string
+    LUMA_KEY:string
+    VIGGLE_SERVER:string
+    VIGGLE_KEY:string
+    RUNWAY_SERVER:string
+    RUNWAY_KEY:string
+    IDEO_SERVER:string
+    IDEO_KEY:string
+    KLING_SERVER:string
+    KLING_KEY:string
+    IS_SET_SYNC?:boolean
+    GPTS_GX?:boolean
+    IS_LUMA_PRO?:boolean
+    RRUNWAY_VERSION?:string
+    DRAW_TYPE?:string
+    IS_VIGGLE_PRO?:boolean
+    TAB_VIDEO?:string
 
 }
 
@@ -100,7 +119,21 @@ let v:gptServerType={
         MJ_SERVER:'',
         UPLOADER_URL:'',
         MJ_API_SECRET:'',
+        SUNO_KEY:'',
+        SUNO_SERVER:'',
         MJ_CDN_WSRV:false
+        ,IS_SET_SYNC:true,
+        LUMA_SERVER:'',
+        LUMA_KEY:'',
+        VIGGLE_SERVER:'',
+        VIGGLE_KEY:'',
+        TAB_VIDEO:'luma',
+        RUNWAY_SERVER:'',
+        RUNWAY_KEY:'',
+        IDEO_SERVER:'',
+        IDEO_KEY:'',
+        KLING_SERVER:'',
+        KLING_KEY:''
     }
     return v ;
 }

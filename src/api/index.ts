@@ -77,4 +77,6 @@ export * from "./dutu/aidutu"
 export * from "./dutu/dutuType"
 export * from "./dutu/fun"
 export * from "./sse/fetchsse"
+export * from "./ideo"
+export * from "./luma"
 

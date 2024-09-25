@@ -74,6 +74,23 @@ export default defineConfig((env) => {
           target: viteEnv.VITE_APP_API_BASE_URL,
           changeOrigin: true, 
         },
+        '/ideogram': {
+          target: viteEnv.VITE_APP_API_BASE_URL,
+          changeOrigin: true, 
+        },
+         '/luma': {
+          target: viteEnv.VITE_APP_API_BASE_URL,
+          changeOrigin: true, 
+        },
+         '/runway': {
+          target: viteEnv.VITE_APP_API_BASE_URL,
+          changeOrigin: true, 
+        },
+         '/kling': {
+          target: viteEnv.VITE_APP_API_BASE_URL,
+          changeOrigin: true, 
+        }
+        //
         
       },
     },

@@ -8,7 +8,7 @@ import { useChat } from '../chat/hooks/useChat'
 import { useUsingContext } from '../chat/hooks/useUsingContext' 
 import { useBasicLayout } from '@/hooks/useBasicLayout'
 import { homeStore, useChatStore, usePromptStore } from '@/store'
-import {   mlog,subTask,localSaveAny, subGPT } from '@/api'
+import {   mlog,subTask,localSaveAny, subGPT, isDallImageModel } from '@/api'
 import { t } from '@/locales'
 
 let controller = new AbortController()
@@ -221,7 +221,8 @@ watch(()=>homeStore.myData.act,(n)=>{
                //homeStore.setMyData{{act}}
                homeStore.setMyData({act:'mjReload', actData:{mjID:dchat.mjID,noShow:true} })
                toBottom();
-            }else if(  (dchat.model=='dall-e-2' || dchat.model=='dall-e-3')   && dchat.opt?.imageUrl ){
+            //}else if(  (dchat.model=='dall-e-2' || dchat.model=='dall-e-3')   && dchat.opt?.imageUrl ){
+             }else if(  dchat.model && ( isDallImageModel(dchat.model) )   && dchat.opt?.imageUrl ){
                 homeStore.setMyData({act:'dallReload', actData:{myid:dchat.myid,noShow:true} });
                 toBottom();
             }

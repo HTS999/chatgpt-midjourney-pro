@@ -2,7 +2,7 @@
 import { useBasicLayout } from '@/hooks/useBasicLayout'
 import { NImage,NButton,NModal,useMessage } from 'naive-ui'
 import { computed , ref,watch } from 'vue'
-import {  localGet,mlog, url2base64 } from '@/api'
+import {  isDallImageModel, localGet,mlog, url2base64 } from '@/api'
 import { homeStore } from '@/store'
 const { isMobile } = useBasicLayout()
 const st = ref({isLoadImg:false,uri_base64:''})
@@ -11,7 +11,8 @@ const chat = computed(() =>props.chat);
 
 const load = async ()=>{
      mlog('load', chat.value.myid, chat.value.opt?.imageUrl );
-     if(chat.value.model!='dall-e-3' || !chat.value.myid || !chat.value.opt?.imageUrl ){
+    //  if(chat.value.model!='dall-e-3' || !chat.value.myid || !chat.value.opt?.imageUrl ){
+     if( !isDallImageModel(chat.value.model)  || !chat.value.myid || !chat.value.opt?.imageUrl ){
          st.value.isLoadImg=true;
       return ;
      }

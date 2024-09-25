@@ -17,6 +17,7 @@ import axios from 'axios';
 import AWS  from 'aws-sdk';
 import { v4 as uuidv4} from 'uuid';
 import { preTokenProcessMiddleware, slog, sseChat,endResDecorator, rz2mq, preMjapi,mp3time } from './dutu'
+import { ideoProxyFileDo, ideogramProxy, klingProxy, lumaProxy, runwayProxy } from './ideogram'
 
 
 
@@ -339,8 +340,19 @@ const sunoapiProxy = proxy(API_BASE_URL, {
   userResDecorator:sunoEndResDecorator// endResDecorator
   
 });
+
 app.use('/sunoapi' ,preTokenProcessMiddleware, sunoapiProxy );
 
+app.use('/ideogram/remix' ,preTokenProcessMiddleware,  upload2.single('image_file'), ideoProxyFileDo  );
+app.use('/ideogram' ,preTokenProcessMiddleware, ideogramProxy );
+
+app.use('/luma' ,preTokenProcessMiddleware, lumaProxy);
+
+//runway
+app.use('/runway',preTokenProcessMiddleware ,runwayProxy)
+
+//kling转发
+app.use('/kling' ,preTokenProcessMiddleware, klingProxy);
 
 app.use('', router)
 app.use('/api', router)

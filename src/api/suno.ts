@@ -10,7 +10,7 @@ const getUrl=(url:string)=>{
     // }
     return `/sunoapi${url}`;
 }
-function getHeaderAuthorization(){
+export function getHeaderAuthorization(){
     // let headers={}
     // if( homeStore.myData.vtoken ){
     //     const  vtokenh={ 'x-vtoken':  homeStore.myData.vtoken ,'x-ctoken':  homeStore.myData.ctoken};

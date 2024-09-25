@@ -17,7 +17,7 @@ const config = ref({
 model:['o1-preview','o1-mini','o1-preview-2024-09-12','o1-mini-2024-09-12','gpt-4-turbo-2024-04-09','gpt-4o','gpt-4o-mini','gpt-4o-mini-2024-07-18','gpt-4o-2024-05-13','gpt-4-turbo','gpt-4-0125-preview','gpt-3.5-turbo',`gpt-4-1106-preview`,`gpt-3.5-turbo-16k`,'gpt-4','gpt-4-0613','gpt-4-32k-0613' ,'gpt-4-32k','gpt-4-32k-0314',`gpt-3.5-turbo-16k-0613`
 ,`gpt-4-vision-preview`,`gpt-3.5-turbo-1106` ,'gpt-3.5-turbo-0125'
 ,'gpt-3.5-turbo-0301','gpt-3.5-turbo-0613','gpt-4-all','gpt-3.5-net','gemini-pro',"gemini-pro-vision",'gemini-pro-1.5'
-,'claude-3-sonnet-20240229','claude-3-opus-20240229','claude-3-haiku-20240307','suno-v3'
+,'claude-3-sonnet-20240229','claude-3-opus-20240229','claude-3-haiku-20240307','claude-3-5-sonnet-20240620','suno-v3'
 ]
 ,maxToken:4096
 }); 
@@ -103,7 +103,7 @@ onMounted(() => {
 <template>
 <section class="mb-4 flex justify-between items-center"  >
      <div ><span class="text-red-500">*</span>  {{ $t('mjset.model') }}</div>
-    <n-select v-model:value="nGptStore.model" :options="modellist" size="small"  class="!w-[50%]"   />
+    <n-select v-model:value="nGptStore.model" :options="modellist" size="small"  filterable class="!w-[50%]"   />
 </section>
 <section class="mb-4 flex justify-between items-center"  >
     <n-input   :placeholder="$t('mjchat.modlePlaceholder')" v-model:value="nGptStore.userModel">

@@ -14,6 +14,7 @@ import { chatSetting } from "./chat";
 //import FormData from 'form-data';
 import {getLocalToken} from './dutu/aidutu';
 import { nextTick } from "vue";
+import { ideoSubmit } from "./ideo";
 
 export const KnowledgeCutOffDate: Record<string, string> = {
   "gpt-4-1106-preview": "2023-04",
@@ -142,7 +143,24 @@ export const subGPT= async (data:any, chat:Chat.Chat )=>{
    let d:any;
    let action= data.action;
    //chat.myid=  `${Date.now()}`;
-   if(  action=='gpt.dall-e-3' ){ //执行变化
+   if(  action=='gpt.dall-e-3' && data.data && data.data.model && data.data.model.indexOf('ideogram')>-1 ){ //ideogram
+         mlog("ddlog 数据 ", data.data  )
+         try{
+            let d= await ideoSubmit(data.data );
+            mlog("ddlog 数据返回 ", d  )
+             const rz = d[0];
+            chat.text= rz.prompt//rz.p??`图片已完成`;
+            chat.opt={imageUrl:rz.url } ;
+            chat.loading = false;
+            homeStore.setMyData({act:'updateChat', actData:chat });
+
+         }catch(e){
+            //chat.text='失败！'+"\n```json\n"+JSON.stringify(d, null, 2)+"\n```\n";
+            chat.text='失败！'+"\n```json\n"+   e  +"\n```\n";
+            chat.loading=false;
+            homeStore.setMyData({act:'updateChat', actData:chat });
+         }
+   }else if(  action=='gpt.dall-e-3' ){ //执行变化
        // chat.model= 'dall-e-3';
 
        let d= await gptFetch('/v1/images/generations', data.data);
@@ -523,3 +541,18 @@ export const getHistoryMessage= async (dataSources:Chat.Chat[],loadingCnt=1 ,sta
     mlog('rz',rz);
     return rz ;
 }
+
+
+export const isDallImageModel =(model:string|undefined)=>{
+    if(!model) return false;
+    if( model.indexOf('flux')>-1 ) return true; 
+    if( model.indexOf('ideogram')>-1 ) return true; 
+    return ['dall-e-2' ,'dall-e-3','ideogram' ].indexOf(model)>-1
+      
+}
+
+export const isDisableMenu=(menu:string)=>{
+
+ return (homeStore.myData.session  && homeStore.myData.session.menuDisable && homeStore.myData.session.menuDisable.indexOf( menu)>-1 )
+}
+

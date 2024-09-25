@@ -14,7 +14,7 @@ import ttsText from '@/views/mj/ttsText.vue'
 import whisperText from '@/views/mj/whisperText.vue'
 import MjTextAttr from '@/views/mj/mjTextAttr.vue'
 import aiTextSetting from '@/views/mj/aiTextSetting.vue'
-import { isApikeyError, isTTS } from '@/api'
+import { isApikeyError, isTTS,isDallImageModel  } from '@/api'
 
 interface Props {
   inversion?: boolean
@@ -123,7 +123,8 @@ onUnmounted(() => {
     <div ref="textRef" class="leading-relaxed break-words">
       <div v-if="!inversion">
         <aiTextSetting v-if="!inversion && isApikeyError(text)"/>
-        <dallText :chat="chat" v-if="chat.model=='dall-e-3' || chat.model=='dall-e-2'" class="whitespace-pre-wrap" />
+        <!-- <dallText :chat="chat" v-if="chat.model=='dall-e-3' || chat.model=='dall-e-2'" class="whitespace-pre-wrap" /> -->
+        <dallText :chat="chat" v-if=" chat.model && chat.model?.indexOf('chat') == -1 && isDallImageModel( chat.model ) " class="whitespace-pre-wrap" />
         <mjText v-if="chat.mjID" class="whitespace-pre-wrap" :chat="chat" :mdi="mdi"></mjText>
         <ttsText v-else-if="chat.model && isTTS(chat.model) && chat.text=='ok'" :chat="chat"/>
         <template v-else>
