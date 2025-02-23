@@ -30,6 +30,8 @@ export const KnowledgeCutOffDate: Record<string, string> = {
   "claude-3-opus-20240229": "2023-08",
   "claude-3-sonnet-20240229": "2023-08",
   "claude-3-haiku-20240307": "2023-08",
+  "deepseek-v3": "2023-12",
+  "deepseek-r1": "2023-12",
   "gemini-pro": "2023-12",
   "gemini-pro-vision": "2023-12",
   "gemini-pro-1.5": "2024-04"
@@ -208,7 +210,10 @@ export const getSystemMessage = (uuid?:number )=>{
     let model= gptConfigStore.myData.model?gptConfigStore.myData.model: "gpt-3.5-turbo";
     let producer= 'You are ChatGPT, a large language model trained by OpenAI.'
     if(model.includes('claude-3')) producer=  'You are Claude, a large language model trained by Anthropic.';
-      const DEFAULT_SYSTEM_TEMPLATE = `${producer}
+     if(model.includes('gemini')) producer=  'You are Gemini, a large language model trained by Google.';
+    if(model.includes('deepseek')) producer=  'You are DeepSeek, a large language model trained by DeepSeek.';
+    
+    const DEFAULT_SYSTEM_TEMPLATE = `${producer}
 Knowledge cutoff: ${KnowledgeCutOffDate[model]}
 Current model: ${model}
 Current time: ${ new Date().toLocaleString()}
@@ -477,7 +482,8 @@ const getModelMax=( model:string )=>{
         return 16;
     }else if( model.indexOf('32k')>-1  ){
         return 32;
-    }else if( model.indexOf('64k')>-1  ){
+    }else if( model.indexOf('64k')>-1 || model.indexOf('deepseek')>-1 ){
+        return 64;
     }else if( model.indexOf('gpt-4-turbo')>-1  ){
         return 128;
     }else if( model.indexOf('128k')>-1 

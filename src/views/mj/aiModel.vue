@@ -14,7 +14,7 @@ const chatSet = new chatSetting( uuid==null?1002:uuid);
 const nGptStore = ref(  chatSet.getGptConfig() );
 
 const config = ref({
-model:['o1-preview','o1-mini','o1-preview-2024-09-12','o1-mini-2024-09-12','gpt-4-turbo-2024-04-09','gpt-4o','gpt-4o-mini','gpt-4o-mini-2024-07-18','gpt-4o-2024-05-13','gpt-4-turbo','gpt-4-0125-preview','gpt-3.5-turbo',`gpt-4-1106-preview`,`gpt-3.5-turbo-16k`,'gpt-4','gpt-4-0613','gpt-4-32k-0613' ,'gpt-4-32k','gpt-4-32k-0314',`gpt-3.5-turbo-16k-0613`
+model:['deepseek-v3','deepseek-r1','o1-preview','o1-mini','o1-preview-2024-09-12','o1-mini-2024-09-12','gpt-4-turbo-2024-04-09','gpt-4o','gpt-4o-mini','gpt-4o-mini-2024-07-18','gpt-4o-2024-05-13','gpt-4-turbo','gpt-4-0125-preview','gpt-3.5-turbo',`gpt-4-1106-preview`,`gpt-3.5-turbo-16k`,'gpt-4','gpt-4-0613','gpt-4-32k-0613' ,'gpt-4-32k','gpt-4-32k-0314',`gpt-3.5-turbo-16k-0613`
 ,`gpt-4-vision-preview`,`gpt-3.5-turbo-1106` ,'gpt-3.5-turbo-0125'
 ,'gpt-3.5-turbo-0301','gpt-3.5-turbo-0613','gpt-4-all','gpt-3.5-net','gemini-pro',"gemini-pro-vision",'gemini-pro-1.5'
 ,'claude-3-sonnet-20240229','claude-3-opus-20240229','claude-3-haiku-20240307','claude-3-5-sonnet-20240620','suno-v3'
@@ -80,6 +80,8 @@ watch(()=>nGptStore.value.model,(n)=>{
         max=4096;
     }else if( n.indexOf('gpt-4')>-1 ||  n.indexOf('o1-')>-1 ||  n.indexOf('16k')>-1 ){ //['16k','8k','32k','gpt-4'].indexOf(n)>-1
         max=4096*2;
+    }else if( n.toLowerCase().includes('claude-3-5') ||  n.toLowerCase().includes('deepseek') ){ //deepseek
+        max=4096*2*2;
     }else if( n.toLowerCase().includes('claude-3') ){
          max=4096*2;
     }
